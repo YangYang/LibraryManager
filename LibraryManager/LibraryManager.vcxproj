@@ -178,6 +178,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
+    <None Include="res\bitmap1.bmp" />
     <None Include="res\LibraryManager.ico" />
     <None Include="res\LibraryManager.rc2" />
   </ItemGroup>

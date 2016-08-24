@@ -101,6 +101,12 @@ void InterfaceForUser::OnBnClickedOk()
 			{
 				if(row)
 				{
+					/*
+					数据库中书名编码为utf8
+					在此处汉字可以完美显示
+					AddString(LPCTSTR);Unicode编码
+					CString 也是Unicode编码
+					*/
 					string bookName=row[3];
 					CString cstr=transformPlus.toCString(bookName);
 					int judge=select_list_box.AddString(cstr);
