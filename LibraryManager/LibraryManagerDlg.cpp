@@ -50,6 +50,8 @@ END_MESSAGE_MAP()
 
 CLibraryManagerDlg::CLibraryManagerDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CLibraryManagerDlg::IDD, pParent)
+	, edit_username(_T(""))
+	, edit_password(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -57,6 +59,8 @@ CLibraryManagerDlg::CLibraryManagerDlg(CWnd* pParent /*=NULL*/)
 void CLibraryManagerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_EDIT1, edit_username);
+	DDX_Text(pDX, IDC_EDIT2, edit_password);
 }
 
 BEGIN_MESSAGE_MAP(CLibraryManagerDlg, CDialogEx)
@@ -64,6 +68,8 @@ BEGIN_MESSAGE_MAP(CLibraryManagerDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDOK, &CLibraryManagerDlg::OnBnClickedOk)
+	ON_BN_CLICKED(IDCANCEL, &CLibraryManagerDlg::OnBnClickedCancel)
+	ON_BN_CLICKED(IDC_BUTTON1, &CLibraryManagerDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -158,18 +164,86 @@ void CLibraryManagerDlg::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	UpdateData(TRUE);
-
-	/*MYSQL local_mysql;
+	if(edit_username==""||edit_password=="")
+	{
+		AfxMessageBox(_T("用户名或密码不能为空！"));
+		return ;
+	}
+	MYSQL local_mysql;
 	mysql_init(&local_mysql);
 	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
 	{
 		MessageBox(_T("error"));
 		AfxMessageBox(_T("connect to databases failed!"));
+		return ;
 	}
 	else
 	{
-		AfxMessageBox(_T("connect to database success!"));
+		//AfxMessageBox(_T("connect to database success!"));
 		mysql_query(&local_mysql,"set names'gb2312'");
-	}*/
+	}
+	CString sql_query;
+	//如果是汉字，需要添加''		
+	sql_query.Format(_T("select * from user where username = \'%s\';"),  edit_username);
+	string sql_Query=transformPlus.toString(sql_query);
+	const char  * sql=sql_Query.c_str();
+	MYSQL_RES * result;
+	MYSQL_ROW row;
+	//返回0，成功！
+	int res;
+	res=mysql_query(&local_mysql,sql);
+	//mysql_query返回值问题！！！！！！！！！！
+	if(res==0)
+	{
+		//将结果保存至result
+		result=mysql_store_result(&local_mysql);
+		row=mysql_fetch_row(result);
+		//将数据库中password 即row[2]保存至password
+		if(!row)
+		{
+			AfxMessageBox(_T("查无此人！"));
+			return ;
+		}
+		string password=row[2];
+		string Password=transformPlus.toString(edit_password);
+		string type=row[5];
+		if(password!=Password)
+		{
+			AfxMessageBox(_T("密码输入错误！"));
+			return ;
+		}
+		else
+		{
+			if(type=="0")
+			{
+				MessageBox(_T("admin"));
+				return ;
+			}
+			else
+			{
+				MessageBox(_T("user"));
+				return ;
+			}
+		}
+	}
+	else
+	{
+		AfxMessageBox(_T("查无此人！"));
+		return ;
+	}
 	CDialogEx::OnOK();
+}
+
+
+void CLibraryManagerDlg::OnBnClickedCancel()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CDialogEx::OnCancel();
+}
+
+
+void CLibraryManagerDlg::OnBnClickedButton1()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	MessageBox(_T("跳转至注册界面"));
 }

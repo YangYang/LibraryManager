@@ -36,4 +36,8 @@ protected:
 public:
 	TransformPlus transformPlus;
 	afx_msg void OnBnClickedOk();
+	CString edit_username;
+	CString edit_password;
+	afx_msg void OnBnClickedCancel();
+	afx_msg void OnBnClickedButton1();
 };
