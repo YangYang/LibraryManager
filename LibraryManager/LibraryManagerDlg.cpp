@@ -222,7 +222,11 @@ void CLibraryManagerDlg::OnBnClickedOk()
 			else
 			{
 				MessageBox(_T("user"));
-				return ;
+				InterfaceForUser interfaceForUser;
+				this->ShowWindow(SW_HIDE);
+				interfaceForUser.DoModal();
+				this->ShowWindow(SW_SHOW);
+				CDialogEx::OnOK();
 			}
 		}
 	}
@@ -245,5 +249,9 @@ void CLibraryManagerDlg::OnBnClickedCancel()
 void CLibraryManagerDlg::OnBnClickedButton1()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	MessageBox(_T("跳转至注册界面"));
+	this->ShowWindow(SW_HIDE);
+	SignIn signIn;
+	signIn.DoModal();
+	this->ShowWindow(SW_SHOW);
+	//MessageBox(_T("跳转至注册界面"));
 }

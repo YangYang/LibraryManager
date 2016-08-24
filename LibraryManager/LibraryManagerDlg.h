@@ -8,7 +8,8 @@
 #include <mysql.h>
 #include "TransformPlus.h"
 #include "binary_log_types.h"
-
+#include "SignIn.h"
+#include "InterfaceForUser.h"
 // CLibraryManagerDlg ¶Ô»°¿ò
 class CLibraryManagerDlg : public CDialogEx
 {
