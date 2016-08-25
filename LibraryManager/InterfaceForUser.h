@@ -3,6 +3,8 @@
 #include <string>
 #include "TransformPlus.h"
 #include <mysql.h>
+#include "Book.h"
+#include "List.h"
 
 // InterfaceForUser ¶Ô»°¿ò
 
@@ -36,4 +38,20 @@ public:
 	CString book_number;
 	CButton control_search_button;
 	afx_msg void OnEnChangeEdit1();
+	CStatic control_book_number;
+	afx_msg void OnLbnSelchangeList1();
+	CString book_name;
+	CString book_author;
+	CString book_press;
+	CString book_date;
+	CString book_type;
+	CString book_about;
+	CStatic control_book_name;
+	CStatic control_book_author;
+	CStatic control_book_press;
+	CStatic control_book_date;
+	CStatic control_book_type;
+	CStatic control_book_about;
+	Book book;
+
 };

@@ -185,9 +185,11 @@
   <ItemGroup>
     <ClInclude Include="binary_log_funcs.h" />
     <ClInclude Include="binary_log_types.h" />
+    <ClInclude Include="Book.h" />
     <ClInclude Include="InterfaceForUser.h" />
     <ClInclude Include="LibraryManager.h" />
     <ClInclude Include="LibraryManagerDlg.h" />
+    <ClInclude Include="List.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SignIn.h" />
     <ClInclude Include="stdafx.h" />
@@ -195,9 +197,11 @@
     <ClInclude Include="TransformPlus.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Book.cpp" />
     <ClCompile Include="InterfaceForUser.cpp" />
     <ClCompile Include="LibraryManager.cpp" />
     <ClCompile Include="LibraryManagerDlg.cpp" />
+    <ClCompile Include="List.cpp" />
     <ClCompile Include="SignIn.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
