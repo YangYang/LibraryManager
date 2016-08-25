@@ -16,7 +16,7 @@ InterfaceForUser::InterfaceForUser(CWnd* pParent /*=NULL*/)
 	, edit_search(_T(""))
 
 
-	, select_type(0)
+	, select_type(-1)
 
 	, book_number(_T(""))
 {
@@ -53,11 +53,9 @@ END_MESSAGE_MAP()
 
 
 
-
 void InterfaceForUser::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	
 	MYSQL local_mysql;
 	mysql_init(&local_mysql);
 	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
@@ -72,10 +70,68 @@ void InterfaceForUser::OnBnClickedOk()
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 	CString sql_select;
+	//图书信息list 置空！
 	select_list_box.ResetContent();
+	if(select_type==-1)
+	{
+		all_book_number=0;
+		CString cstr=transformPlus.toCString(all_book_number);
+		book_number=L"0";
+		UpdateData(FALSE);
+		AfxMessageBox(_T("请选择搜索方式！"));
+		return ;
+	}
 	if(select_type==1)
 	{
-		sql_select.Format(_T("select * from book where username = \'%s\';"),  edit_search);
+		UpdateData(TRUE);
+		sql_select.Format(_T("select * from book where bookName = \'%s\';"),  edit_search);
+		string sql_Select=transformPlus.toString(sql_select);
+		const char  * sql=sql_Select.c_str();
+		int res=mysql_query(&local_mysql,sql);
+		MYSQL_RES * result;
+		MYSQL_ROW row;
+		if(res==0)
+		{
+			result=mysql_store_result(&local_mysql);
+			while(row=mysql_fetch_row(result))
+			{
+				if(row)
+				{
+					string bookName=row[3];
+					CString cstr=transformPlus.toCString(bookName);
+					int judge=select_list_box.AddString(cstr);
+				}
+				else
+				{
+					AfxMessageBox(L"error");
+				}
+			}
+			all_book_number=select_list_box.GetCount();
+			CString cstr=transformPlus.toCString(all_book_number);
+			if (all_book_number==0)
+			{
+				book_number=L"0";
+			}
+			else if(all_book_number>0)
+			{
+				book_number.Format(_T("%s"),cstr);
+				select_type=-1;
+				UpdateData(FALSE);
+				return ;
+			}
+			else
+			{
+				book_number=L"";
+				UpdateData(FALSE);
+				return ;
+			}
+		}
+		else
+		{
+			AfxMessageBox(_T("未查询到结果！"));
+			return ;
+		}
+		return ;
 
 	}
 	else if(select_type==2)
@@ -126,12 +182,17 @@ void InterfaceForUser::OnBnClickedOk()
 			else if(all_book_number>0)
 			{
 				book_number.Format(_T("%s"),cstr);
+				select_type=-1;
+				UpdateData(FALSE);
+				return ;
 			}
 			else
 			{
 				book_number=L"";
+				UpdateData(FALSE);
+				return ;
 			}
-			UpdateData(FALSE);
+			
 		}
 		else
 		{
