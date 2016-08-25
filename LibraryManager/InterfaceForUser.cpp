@@ -35,6 +35,7 @@ void InterfaceForUser::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, IDC_LIST1, select_list_box);
 	DDX_Text(pDX, IDC_BOOKNUMBER, book_number);
+	DDX_Control(pDX, IDOK, control_search_button);
 }
 
 
@@ -45,6 +46,7 @@ BEGIN_MESSAGE_MAP(InterfaceForUser, CDialogEx)
 	ON_BN_CLICKED(IDC_RADIO2, &InterfaceForUser::OnBnClickedRadio2)
 	ON_BN_CLICKED(IDC_RADIO3, &InterfaceForUser::OnBnClickedRadio3)
 	ON_BN_CLICKED(IDC_RADIO4, &InterfaceForUser::OnBnClickedRadio4)
+	ON_EN_CHANGE(IDC_EDIT1, &InterfaceForUser::OnEnChangeEdit1)
 END_MESSAGE_MAP()
 
 
@@ -57,6 +59,7 @@ void InterfaceForUser::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	MYSQL local_mysql;
+	
 	mysql_init(&local_mysql);
 	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
 	{
@@ -70,6 +73,7 @@ void InterfaceForUser::OnBnClickedOk()
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 	CString sql_select;
+	
 	//图书信息list 置空！
 	select_list_box.ResetContent();
 	if(select_type==-1)
@@ -83,8 +87,8 @@ void InterfaceForUser::OnBnClickedOk()
 	}
 	if(select_type==1)
 	{
-		UpdateData(TRUE);
-		sql_select.Format(_T("select * from book where bookName = \'%s\';"),  edit_search);
+		//UpdateData(TRUE);
+		sql_select.Format(_T("select * from book where bookName like \'%s\';"),  edit_search);
 		string sql_Select=transformPlus.toString(sql_select);
 		const char  * sql=sql_Select.c_str();
 		int res=mysql_query(&local_mysql,sql);
@@ -110,7 +114,8 @@ void InterfaceForUser::OnBnClickedOk()
 			CString cstr=transformPlus.toCString(all_book_number);
 			if (all_book_number==0)
 			{
-				book_number=L"0";
+				book_number=L"";
+				//UpdateData(FALSE);
 			}
 			else if(all_book_number>0)
 			{
@@ -122,7 +127,6 @@ void InterfaceForUser::OnBnClickedOk()
 			else
 			{
 				book_number=L"";
-				UpdateData(FALSE);
 				return ;
 			}
 		}
@@ -132,10 +136,10 @@ void InterfaceForUser::OnBnClickedOk()
 			return ;
 		}
 		return ;
-
 	}
 	else if(select_type==2)
 	{
+
 
 	}
 	else if(select_type==3)
@@ -207,27 +211,61 @@ void InterfaceForUser::OnBnClickedOk()
 void InterfaceForUser::OnBnClickedRadio1()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	GetDlgItem(IDC_EDIT1)->EnableWindow(TRUE);
-	select_type=1;//书籍名
-	return ;
+	UpdateData(TRUE);
+	if(edit_search=="")
+	{
+		GetDlgItem(IDC_EDIT1)->EnableWindow(TRUE);
+		select_type=1;//书籍名
+		control_search_button.EnableWindow(FALSE);
+		//UpdateData(FALSE);
+		return ;
+	}
+	else
+	{
+		control_search_button.EnableWindow(TRUE);
+		GetDlgItem(IDC_EDIT1)->EnableWindow(TRUE);
+		select_type=1;//书籍名0
+		//UpdateData(FALSE);
+		return ;
+	}
 }
 
 
 void InterfaceForUser::OnBnClickedRadio2()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	GetDlgItem(IDC_EDIT1)->EnableWindow(TRUE);
-	select_type=2;//书籍编号
-	return ;
+	if(edit_search=="")
+	{
+		GetDlgItem(IDC_EDIT1)->EnableWindow(TRUE);
+		select_type=2;//书籍名
+		control_search_button.EnableWindow(FALSE);
+	}
+	else
+	{
+		control_search_button.EnableWindow(TRUE);
+		GetDlgItem(IDC_EDIT1)->EnableWindow(TRUE);
+		select_type=2;//书籍名
+		return ;
+	}
 }
 
 
 void InterfaceForUser::OnBnClickedRadio3()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	GetDlgItem(IDC_EDIT1)->EnableWindow(TRUE);
-	select_type=3;//中图分类号
-	return ;
+	if(edit_search=="")
+	{
+		GetDlgItem(IDC_EDIT1)->EnableWindow(TRUE);
+		select_type=3;//书籍名
+		control_search_button.EnableWindow(FALSE);
+	}
+	else
+	{
+		control_search_button.EnableWindow(TRUE);
+		GetDlgItem(IDC_EDIT1)->EnableWindow(TRUE);
+		select_type=3;//书籍名
+		return ;
+	}
 }
 
 
@@ -241,3 +279,24 @@ void InterfaceForUser::OnBnClickedRadio4()
 
 
 
+
+
+void InterfaceForUser::OnEnChangeEdit1()
+{
+	// TODO:  如果该控件是 RICHEDIT 控件，它将不
+	// 发送此通知，除非重写 CDialogEx::OnInitDialog()
+	// 函数并调用 CRichEditCtrl().SetEventMask()，
+	// 同时将 ENM_CHANGE 标志“或”运算到掩码中。
+	//UpdateData(FALSE);
+	if (select_type==-1)
+	{
+		control_search_button.EnableWindow(FALSE);
+		return ;
+	}
+	else
+	{
+		control_search_button.EnableWindow(TRUE);
+	}
+	//UpdateData(TRUE);
+	// TODO:  在此添加控件通知处理程序代码
+}

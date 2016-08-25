@@ -34,4 +34,6 @@ public:
 	int all_book_number;
 	CListBox select_list_box;
 	CString book_number;
+	CButton control_search_button;
+	afx_msg void OnEnChangeEdit1();
 };
