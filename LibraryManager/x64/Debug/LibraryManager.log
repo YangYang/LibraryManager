@@ -1,4 +1,4 @@
-﻿生成启动时间为 2016/8/25 22:01:22。
+﻿生成启动时间为 2016/8/26 9:30:06。
      1>项目“C:\Users\yangy\Documents\GitHub\LibraryManager\LibraryManager\LibraryManager.vcxproj”在节点 2 上(build 个目标)。
      1>InitializeBuildStatus:
          正在创建“x64\Debug\LibraryManager.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
@@ -9,8 +9,9 @@
          Generating Code...
          Compiling...
          LibraryManagerDlg.cpp
-         LibraryManager.cpp
          Generating Code...
+         Skipping... (no relevant changes detected)
+         LibraryManager.cpp
        ResourceCompile:
          所有输出均为最新。
        ManifestResourceCompile:
@@ -40,4 +41,4 @@
 
 生成成功。
 
-已用时间 00:00:07.41
+已用时间 00:00:03.79

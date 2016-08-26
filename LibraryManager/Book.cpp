@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "Book.h"
 
-Book::Book(string isbn,string listposition)
+Book::Book(string isbn,int listposition)
 {
 	ISBN=isbn;
 	listPosition=listposition;
@@ -20,7 +20,7 @@ string Book::reISBN()
 	return ISBN;
 }
 
-string Book::reListPosition()
+int Book::reListPosition()
 {
 	return listPosition;
 }

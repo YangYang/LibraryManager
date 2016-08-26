@@ -25,6 +25,7 @@ InterfaceForUser::InterfaceForUser(CWnd* pParent /*=NULL*/)
 	, book_date(_T(""))
 	, book_type(_T(""))
 	, book_about(_T(""))
+	, book_ISBN(_T(""))
 {
 
 }
@@ -55,6 +56,8 @@ void InterfaceForUser::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BOOKDATETEXT, control_book_date);
 	DDX_Control(pDX, IDC_BOOKTYPETEXT, control_book_type);
 	DDX_Control(pDX, IDC_ABOUTBOOKTEXT, control_book_about);
+	DDX_Text(pDX, IDC_BOOKISBNTEXT, book_ISBN);
+	DDX_Control(pDX, IDC_BOOKISBNTEXT, control_book_ISBN);
 }
 
 
@@ -67,6 +70,7 @@ BEGIN_MESSAGE_MAP(InterfaceForUser, CDialogEx)
 	ON_BN_CLICKED(IDC_RADIO4, &InterfaceForUser::OnBnClickedRadio4)
 	ON_EN_CHANGE(IDC_EDIT1, &InterfaceForUser::OnEnChangeEdit1)
 	ON_LBN_SELCHANGE(IDC_LIST1, &InterfaceForUser::OnLbnSelchangeList1)
+	ON_BN_CLICKED(IDC_BUTTON1, &InterfaceForUser::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -108,6 +112,8 @@ void InterfaceForUser::OnBnClickedOk()
 	if(select_type==1)
 	{
 		//UpdateData(TRUE);
+		//每次搜索时都要清空链表
+		list.clearList();
 		sql_select.Format(_T("select * from book where bookName like \'%s\';"),  edit_search);
 		string sql_Select=transformPlus.toString(sql_select);
 		const char  * sql=sql_Select.c_str();
@@ -122,8 +128,22 @@ void InterfaceForUser::OnBnClickedOk()
 				if(row)
 				{
 					string bookName=row[3];
+					string bookISBN=row[7];
 					CString cstr=transformPlus.toCString(bookName);
-					int judge=select_list_box.AddString(cstr);
+					int judge=select_list_box.InsertString(-1,cstr);
+
+
+					//将图书数据存入list
+					if(judge>=0)
+					{
+						Book * newNode=new Book(bookISBN,judge);
+						list.add(newNode);
+						list.p->next=NULL;
+					}
+					else
+					{
+						AfxMessageBox(_T("Out of memory!"));
+					}
 				}
 				else
 				{
@@ -163,6 +183,8 @@ void InterfaceForUser::OnBnClickedOk()
 	else if(select_type==2)
 	{
 		UpdateData(TRUE);
+		//每次搜索时都要清空链表
+		list.clearList();
 		sql_select.Format(_T("select * from book where ISBN = %s;"),  edit_search);
 		string sql_Select=transformPlus.toString(sql_select);
 		const char  * sql=sql_Select.c_str();
@@ -177,8 +199,22 @@ void InterfaceForUser::OnBnClickedOk()
 				if(row)
 				{
 					string bookName=row[3];
+					string bookISBN=row[7];
 					CString cstr=transformPlus.toCString(bookName);
-					int judge=select_list_box.AddString(cstr);
+					int judge=select_list_box.InsertString(-1,cstr);
+
+
+					//将图书数据存入list
+					if(judge>=0)
+					{
+						Book * newNode=new Book(bookISBN,judge);
+						list.add(newNode);
+						list.p->next=NULL;
+					}
+					else
+					{
+						AfxMessageBox(_T("Out of memory!"));
+					}
 				}
 				else
 				{
@@ -220,6 +256,8 @@ void InterfaceForUser::OnBnClickedOk()
 	else if(select_type==3)
 	{
 		UpdateData(TRUE);
+		//每次搜索时都要清空链表
+		list.clearList();
 		sql_select.Format(_T("select * from book where type = \'%s\';"),  edit_search);
 		string sql_Select=transformPlus.toString(sql_select);
 		const char  * sql=sql_Select.c_str();
@@ -234,8 +272,22 @@ void InterfaceForUser::OnBnClickedOk()
 				if(row)
 				{
 					string bookName=row[3];
+					string bookISBN=row[7];
 					CString cstr=transformPlus.toCString(bookName);
-					int judge=select_list_box.AddString(cstr);
+					int judge=select_list_box.InsertString(-1,cstr);
+
+
+					//将图书数据存入list
+					if(judge>=0)
+					{
+						Book * newNode=new Book(bookISBN,judge);
+						list.add(newNode);
+						list.p->next=NULL;
+					}
+					else
+					{
+						AfxMessageBox(_T("Out of memory!"));
+					}
 				}
 				else
 				{
@@ -274,6 +326,8 @@ void InterfaceForUser::OnBnClickedOk()
 	}
 	else if(select_type==4)
 	{
+		//每次搜索时都要清空链表
+		list.clearList();
 		sql_select=("select * from book where bookNum>1;");
 		string sql_Select=transformPlus.toString(sql_select);
 		const char  * sql=sql_Select.c_str();
@@ -293,9 +347,24 @@ void InterfaceForUser::OnBnClickedOk()
 					AddString(LPCTSTR);Unicode编码
 					CString 也是Unicode编码
 					*/
+					
 					string bookName=row[3];
+					string bookISBN=row[7];
 					CString cstr=transformPlus.toCString(bookName);
-					int judge=select_list_box.AddString(cstr);
+					int judge=select_list_box.InsertString(-1,cstr);
+
+
+					//将图书数据存入list
+					if(judge>=0)
+					{
+						Book * newNode=new Book(bookISBN,judge);
+						list.add(newNode);
+						list.p->next=NULL;
+					}
+					else
+					{
+						AfxMessageBox(_T("Out of memory!"));
+					}
 				}
 				else
 				{
@@ -430,15 +499,92 @@ void InterfaceForUser::OnEnChangeEdit1()
 	// TODO:  在此添加控件通知处理程序代码
 }
 
-
+//显示图书信息
 void InterfaceForUser::OnLbnSelchangeList1()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	MYSQL local_mysql;
+
+	mysql_init(&local_mysql);
+	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
+	{
+		MessageBox(_T("error"));
+		AfxMessageBox(_T("connect to databases failed!"));
+		return ;
+	}
+	else
+	{
+		//AfxMessageBox(_T("connect to database success!"));
+		mysql_query(&local_mysql,"set names'gb2312'");
+	}
+
+
 	CString cstrText;
 	int selectedTextNumber;
 	selectedTextNumber=select_list_box.GetCurSel();//获取当前选中列表项
-
+	/*
+	根据selectTextNumber 检索list 中对应的节点，查找对应的isbn 查找对应的书籍的所有信息
+	*/
+	Book *head=list.head;
+	
+	if(head==NULL)
+	{
+		AfxMessageBox(_T("error!"));
+		return ;
+	}
+	else
+	{
+		while(head)
+		{
+			if(head->reListPosition()==selectedTextNumber)
+			{
+				thisNode=head;
+				break;
+			}
+			head=head->next;
+		}
+	}
+	CString sql_select;
+	sql_select.Format(_T("select * from book where ISBN =\'%s\'"),transformPlus.toCString(thisNode->reISBN()));
+	string sql_Select=transformPlus.toString(sql_select);
+	const char  * sql=sql_Select.c_str();
+	int res=mysql_query(&local_mysql,sql);
+	MYSQL_RES * result;
+	MYSQL_ROW row;
+	if(res==0)
+	{
+		result=mysql_store_result(&local_mysql);
+		row=mysql_fetch_row(result);
+		book_name=row[3];
+		book_author=row[4];
+		book_press=row[5];
+		book_date=row[6];
+		book_ISBN=row[7];
+		book_type=row[2];
+		book_about=row[10];
+		control_book_name.SetWindowText(book_name);
+		control_book_author.SetWindowText(book_author);
+		control_book_press.SetWindowText(book_press);
+		control_book_date.SetWindowText(book_date);
+		control_book_ISBN.SetWindowText(book_ISBN);
+		control_book_type.SetWindowText(book_type);
+		control_book_about.SetWindowText(book_about);
+		return ;
+	}
+	else
+	{
+		AfxMessageBox(_T("error!"));
+		return ;
+	}
+	/*
 	select_list_box.GetText(selectedTextNumber,cstrText);//获取当前选中字符串 赋值给cstrText
 	book_name=cstrText;
 	control_book_name.SetWindowText(book_name);
+	*/
+}
+
+
+void InterfaceForUser::OnBnClickedButton1()
+{
+	// TODO: 在此添加控件通知处理程序代码
 }

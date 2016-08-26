@@ -52,6 +52,9 @@ public:
 	CStatic control_book_date;
 	CStatic control_book_type;
 	CStatic control_book_about;
-	Book book;
-
+	List<Book> list;//book 类的list对象
+	Book *thisNode;//选中的书籍
+	CString book_ISBN;
+	CStatic control_book_ISBN;
+	afx_msg void OnBnClickedButton1();
 };

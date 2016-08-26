@@ -6,11 +6,11 @@ class Book
 {
 public:
 	Book();
-	Book(string ,string );
+	Book(string ,int );
 	~Book(void);
 	string reISBN();
-	string reListPosition();
+	int reListPosition();
 	string ISBN;
-	string listPosition;
+	int listPosition;
 	Book *next;
 };
