@@ -60,4 +60,5 @@ public:
 	CString book_ISBN;
 	CStatic control_book_ISBN;
 	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedButton2();
 };

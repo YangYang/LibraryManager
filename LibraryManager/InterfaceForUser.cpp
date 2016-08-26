@@ -71,6 +71,7 @@ BEGIN_MESSAGE_MAP(InterfaceForUser, CDialogEx)
 	ON_EN_CHANGE(IDC_EDIT1, &InterfaceForUser::OnEnChangeEdit1)
 	ON_LBN_SELCHANGE(IDC_LIST1, &InterfaceForUser::OnLbnSelchangeList1)
 	ON_BN_CLICKED(IDC_BUTTON1, &InterfaceForUser::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON2, &InterfaceForUser::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 
@@ -715,8 +716,43 @@ void InterfaceForUser::OnBnClickedButton1()
 											const char  * SQL_insert=sql_Insert.c_str();
 											if(mysql_query(&local_mysql,SQL_insert)==0)
 											{   
-												MessageBox(_T("借阅成功！"));   
-												return ;
+												int number=0;
+												MYSQL_RES * Result;
+												MYSQL_ROW ROW;
+												CString sql_search;
+												sql_search.Format(_T("select * from user_book where username = \'%s\';"),loginUser);
+												string sql_Search=transformPlus.toString(sql_search);
+												const char * search=sql_Search.c_str();
+												if(mysql_query(&local_mysql,search)==0)
+												{
+													Result=mysql_store_result(&local_mysql);
+													while(ROW=mysql_fetch_row(Result))
+													{
+														if(ROW)
+														{
+															number++;
+														}
+													}
+												}
+												else
+												{
+													AfxMessageBox(_T("error313131312!"));
+													return ;
+												}
+												CString sql_update;
+												sql_update.Format(_T("update user set bookNumber =\'%s\'  where username =\'%s\'; "),transformPlus.toCString(number),loginUser);
+												string sql_Update=transformPlus.toString(sql_update);
+												const char * update=sql_Update.c_str(); 
+												if(mysql_query(&local_mysql,update)==0)
+												{
+													MessageBox(_T("借阅成功！"));   
+													return ;
+												}
+												else
+												{
+													AfxMessageBox(_T("借阅失败！"));
+													return ;
+												}
 											}
 											else
 											{
@@ -751,8 +787,6 @@ void InterfaceForUser::OnBnClickedButton1()
 							AfxMessageBox(_T("query error!"));
 							return ;
 						}
-						//CString sql_insert;
-						//sql_insert.Format(_T("insert into user_book (\'\',\'%s\',\'%s \'); "),loginUser,thisNode->reISBN());
 					}
 				}
 				//研究生
@@ -765,7 +799,148 @@ void InterfaceForUser::OnBnClickedButton1()
 					}
 					else
 					{
+						//判断书籍数量
+						MYSQL_ROW Row;
+						CString sql_query;
+						sql_query.Format(_T("select * from book where ISBN=%s ;"),transformPlus.toCString(thisNode->reISBN()));
+						string sql_Query=transformPlus.toString(sql_query);
+						const char  * SQL=sql_Query.c_str();
+						int Res=mysql_query(&local_mysql,SQL);
+						if(Res==0)
+						{
+							result=mysql_store_result(&local_mysql);
+							Row=mysql_fetch_row(result);
+							if(Row)
+							{
 
+								if(transformPlus.toInt(Row[1])>1)
+								{	
+									CString sql_query;
+									sql_query.Format(_T("select * from user_book where username= \'%s\';"),loginUser);
+									sql_Query=transformPlus.toString(sql_query);
+									SQL=sql_Query.c_str();
+									Res=mysql_query(&local_mysql,SQL);
+									if(Res==0)
+									{
+										int judge=0;
+										result=mysql_use_result(&local_mysql);
+										while(row=mysql_fetch_row(result))
+										{
+											if(row)
+											{
+												if(transformPlus.toString(row[2])==thisNode->reISBN())
+												{
+													judge=1;
+													break ;
+												}
+											}
+										}
+										if(judge==1)
+										{
+											MessageBox(L"您已借阅此图书，不可重复借阅！");
+											return ;
+										}
+										else
+										{
+											MYSQL local_mysql;
+											mysql_init(&local_mysql);
+											if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
+											{
+												MessageBox(_T("error"));
+												AfxMessageBox(_T("connect to databases failed!"));
+												return ;
+											}
+											else
+											{
+												//AfxMessageBox(_T("connect to database success!"));
+												mysql_query(&local_mysql,"set names'gb2312'");
+											}
+											//应还时间reTime
+											time_t now_time=time(0);
+											CString cstrNowTime;
+											cstrNowTime.Format(_T("%d"),now_time);
+											long time_long=transformPlus.toLong(cstrNowTime);
+											time_long+=2592000;
+											CString reTime;
+											reTime=transformPlus.toCString(time_long);
+											//插入
+											CString sql_insert;
+											sql_insert.Format(_T("insert into user_book values (\'\',\'%s\',\'%s\',\'%s\');"),loginUser,transformPlus.toCString(thisNode->reISBN()),reTime);
+											string sql_Insert=transformPlus.toString(sql_insert);
+											const char  * SQL_insert=sql_Insert.c_str();
+											if(mysql_query(&local_mysql,SQL_insert)==0)
+											{   
+												int number=0;
+												MYSQL_RES * Result;
+												MYSQL_ROW ROW;
+												CString sql_search;
+												sql_search.Format(_T("select * from user_book where username = \'%s\';"),loginUser);
+												string sql_Search=transformPlus.toString(sql_search);
+												const char * search=sql_Search.c_str();
+												if(mysql_query(&local_mysql,search)==0)
+												{
+													Result=mysql_store_result(&local_mysql);
+													while(ROW=mysql_fetch_row(Result))
+													{
+														if(ROW)
+														{
+															number++;
+														}
+													}
+												}
+												else
+												{
+													AfxMessageBox(_T("error313131312!"));
+													return ;
+												}
+												CString sql_update;
+												sql_update.Format(_T("update user set bookNumber =\'%s\'  where username =\'%s\'; "),transformPlus.toCString(number),loginUser);
+												string sql_Update=transformPlus.toString(sql_update);
+												const char * update=sql_Update.c_str(); 
+												if(mysql_query(&local_mysql,update)==0)
+												{
+													MessageBox(_T("借阅成功！"));   
+													return ;
+												}
+												else
+												{
+													AfxMessageBox(_T("借阅失败！"));
+													return ;
+												}
+											}
+											else
+											{
+												AfxMessageBox(_T("借阅失败！"));
+												return ;
+											}
+											return ;
+										}
+									}
+									else
+									{
+										AfxMessageBox(_T("error!!!!!!!!!!!"));
+										return ;
+									}
+
+									return ;
+								}
+								else
+								{	//书籍数量不足
+									MessageBox(L"该书籍馆藏量不足！");
+									return ;
+								}
+							}
+							else
+							{
+								AfxMessageBox(_T("errrrrrror"));
+								return ;
+							}
+						}
+						else
+						{
+							AfxMessageBox(_T("query error!"));
+							return ;
+						}
 					}
 				}
 				//博士生
@@ -778,13 +953,295 @@ void InterfaceForUser::OnBnClickedButton1()
 					}
 					else
 					{
+						//判断书籍数量
+						MYSQL_ROW Row;
+						CString sql_query;
+						sql_query.Format(_T("select * from book where ISBN=%s ;"),transformPlus.toCString(thisNode->reISBN()));
+						string sql_Query=transformPlus.toString(sql_query);
+						const char  * SQL=sql_Query.c_str();
+						int Res=mysql_query(&local_mysql,SQL);
+						if(Res==0)
+						{
+							result=mysql_store_result(&local_mysql);
+							Row=mysql_fetch_row(result);
+							if(Row)
+							{
 
+								if(transformPlus.toInt(Row[1])>1)
+								{	
+									CString sql_query;
+									sql_query.Format(_T("select * from user_book where username= \'%s\';"),loginUser);
+									sql_Query=transformPlus.toString(sql_query);
+									SQL=sql_Query.c_str();
+									Res=mysql_query(&local_mysql,SQL);
+									if(Res==0)
+									{
+										int judge=0;
+										result=mysql_use_result(&local_mysql);
+										while(row=mysql_fetch_row(result))
+										{
+											if(row)
+											{
+												if(transformPlus.toString(row[2])==thisNode->reISBN())
+												{
+													judge=1;
+													break ;
+												}
+											}
+										}
+										if(judge==1)
+										{
+											MessageBox(L"您已借阅此图书，不可重复借阅！");
+											return ;
+										}
+										else
+										{
+											MYSQL local_mysql;
+											mysql_init(&local_mysql);
+											if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
+											{
+												MessageBox(_T("error"));
+												AfxMessageBox(_T("connect to databases failed!"));
+												return ;
+											}
+											else
+											{
+												//AfxMessageBox(_T("connect to database success!"));
+												mysql_query(&local_mysql,"set names'gb2312'");
+											}
+											//应还时间reTime
+											time_t now_time=time(0);
+											CString cstrNowTime;
+											cstrNowTime.Format(_T("%d"),now_time);
+											long time_long=transformPlus.toLong(cstrNowTime);
+											time_long+=2592000;
+											CString reTime;
+											reTime=transformPlus.toCString(time_long);
+											//插入
+											CString sql_insert;
+											sql_insert.Format(_T("insert into user_book values (\'\',\'%s\',\'%s\',\'%s\');"),loginUser,transformPlus.toCString(thisNode->reISBN()),reTime);
+											string sql_Insert=transformPlus.toString(sql_insert);
+											const char  * SQL_insert=sql_Insert.c_str();
+											if(mysql_query(&local_mysql,SQL_insert)==0)
+											{   
+												int number=0;
+												MYSQL_RES * Result;
+												MYSQL_ROW ROW;
+												CString sql_search;
+												sql_search.Format(_T("select * from user_book where username = \'%s\';"),loginUser);
+												string sql_Search=transformPlus.toString(sql_search);
+												const char * search=sql_Search.c_str();
+												if(mysql_query(&local_mysql,search)==0)
+												{
+													Result=mysql_store_result(&local_mysql);
+													while(ROW=mysql_fetch_row(Result))
+													{
+														if(ROW)
+														{
+															number++;
+														}
+													}
+												}
+												else
+												{
+													AfxMessageBox(_T("error313131312!"));
+													return ;
+												}
+												CString sql_update;
+												sql_update.Format(_T("update user set bookNumber =\'%s\'  where username =\'%s\'; "),transformPlus.toCString(number),loginUser);
+												string sql_Update=transformPlus.toString(sql_update);
+												const char * update=sql_Update.c_str(); 
+												if(mysql_query(&local_mysql,update)==0)
+												{
+													MessageBox(_T("借阅成功！"));   
+													return ;
+												}
+												else
+												{
+													AfxMessageBox(_T("借阅失败！"));
+													return ;
+												}
+											}
+											else
+											{
+												AfxMessageBox(_T("借阅失败！"));
+												return ;
+											}
+											return ;
+										}
+									}
+									else
+									{
+										AfxMessageBox(_T("error!!!!!!!!!!!"));
+										return ;
+									}
+
+									return ;
+								}
+								else
+								{	//书籍数量不足
+									MessageBox(L"该书籍馆藏量不足！");
+									return ;
+								}
+							}
+							else
+							{
+								AfxMessageBox(_T("errrrrrror"));
+								return ;
+							}
+						}
+						else
+						{
+							AfxMessageBox(_T("query error!"));
+							return ;
+						}
 					}
 				}
 				//教师
 				else if(userType=="4")
 				{
+					//判断书籍数量
+					MYSQL_ROW Row;
+					CString sql_query;
+					sql_query.Format(_T("select * from book where ISBN=%s ;"),transformPlus.toCString(thisNode->reISBN()));
+					string sql_Query=transformPlus.toString(sql_query);
+					const char  * SQL=sql_Query.c_str();
+					int Res=mysql_query(&local_mysql,SQL);
+					if(Res==0)
+					{
+						result=mysql_store_result(&local_mysql);
+						Row=mysql_fetch_row(result);
+						if(Row)
+						{
 
+							if(transformPlus.toInt(Row[1])>1)
+							{	
+								CString sql_query;
+								sql_query.Format(_T("select * from user_book where username= \'%s\';"),loginUser);
+								sql_Query=transformPlus.toString(sql_query);
+								SQL=sql_Query.c_str();
+								Res=mysql_query(&local_mysql,SQL);
+								if(Res==0)
+								{
+									int judge=0;
+									result=mysql_use_result(&local_mysql);
+									while(row=mysql_fetch_row(result))
+									{
+										if(row)
+										{
+											if(transformPlus.toString(row[2])==thisNode->reISBN())
+											{
+												judge=1;
+												break ;
+											}
+										}
+									}
+									if(judge==1)
+									{
+										MessageBox(L"您已借阅此图书，不可重复借阅！");
+										return ;
+									}
+									else
+									{
+										MYSQL local_mysql;
+										mysql_init(&local_mysql);
+										if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
+										{
+											MessageBox(_T("error"));
+											AfxMessageBox(_T("connect to databases failed!"));
+											return ;
+										}
+										else
+										{
+											//AfxMessageBox(_T("connect to database success!"));
+											mysql_query(&local_mysql,"set names'gb2312'");
+										}
+										//应还时间reTime
+										time_t now_time=time(0);
+										CString cstrNowTime;
+										cstrNowTime.Format(_T("%d"),now_time);
+										long time_long=transformPlus.toLong(cstrNowTime);
+										time_long+=2592000;
+										CString reTime;
+										reTime=transformPlus.toCString(time_long);
+										//插入
+										CString sql_insert;
+										sql_insert.Format(_T("insert into user_book values (\'\',\'%s\',\'%s\',\'%s\');"),loginUser,transformPlus.toCString(thisNode->reISBN()),reTime);
+										string sql_Insert=transformPlus.toString(sql_insert);
+										const char  * SQL_insert=sql_Insert.c_str();
+										if(mysql_query(&local_mysql,SQL_insert)==0)
+										{   
+											int number=0;
+											MYSQL_RES * Result;
+											MYSQL_ROW ROW;
+											CString sql_search;
+											sql_search.Format(_T("select * from user_book where username = \'%s\';"),loginUser);
+											string sql_Search=transformPlus.toString(sql_search);
+											const char * search=sql_Search.c_str();
+											if(mysql_query(&local_mysql,search)==0)
+											{
+												Result=mysql_store_result(&local_mysql);
+												while(ROW=mysql_fetch_row(Result))
+												{
+													if(ROW)
+													{
+														number++;
+													}
+												}
+											}
+											else
+											{
+												AfxMessageBox(_T("error313131312!"));
+												return ;
+											}
+											CString sql_update;
+											sql_update.Format(_T("update user set bookNumber =\'%s\'  where username =\'%s\'; "),transformPlus.toCString(number),loginUser);
+											string sql_Update=transformPlus.toString(sql_update);
+											const char * update=sql_Update.c_str(); 
+											if(mysql_query(&local_mysql,update)==0)
+											{
+												MessageBox(_T("借阅成功！"));   
+												return ;
+											}
+											else
+											{
+												AfxMessageBox(_T("借阅失败！"));
+												return ;
+											}
+										}
+										else
+										{
+											AfxMessageBox(_T("借阅失败！"));
+											return ;
+										}
+										return ;
+									}
+								}
+								else
+								{
+									AfxMessageBox(_T("error!!!!!!!!!!!"));
+									return ;
+								}
+
+								return ;
+							}
+							else
+							{	//书籍数量不足
+								MessageBox(L"该书籍馆藏量不足！");
+								return ;
+							}
+						}
+						else
+						{
+							AfxMessageBox(_T("errrrrrror"));
+							return ;
+						}
+					}
+					else
+					{
+						AfxMessageBox(_T("query error!"));
+						return ;
+					}
 				}
 				else
 				{
@@ -812,3 +1269,18 @@ void InterfaceForUser::OnBnClickedButton1()
 	// TODO: 在此添加控件通知处理程序代码
 }
 
+
+
+void InterfaceForUser::OnBnClickedButton2()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	select_list_box.ResetContent();
+	control_book_name.ShowWindow(SW_HIDE);
+	control_book_author.ShowWindow(SW_HIDE);
+	control_book_press.ShowWindow(SW_HIDE);
+	control_book_date.ShowWindow(SW_HIDE);
+	control_book_ISBN.ShowWindow(SW_HIDE);
+	control_book_type.ShowWindow(SW_HIDE);
+	control_book_about.ShowWindow(SW_HIDE);
+	control_book_number.ShowWindow(SW_HIDE);
+}
