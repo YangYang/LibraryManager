@@ -61,4 +61,5 @@ public:
 	CStatic control_book_ISBN;
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
+	void borrowBook(string ,string ,MYSQL );
 };
