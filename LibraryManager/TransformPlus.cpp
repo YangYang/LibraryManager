@@ -95,6 +95,12 @@ int TransformPlus::toInt(double dbl){
 	return i;
 }
 
+long TransformPlus::toLong(CString cstr)
+{
+	long L=_ttoi(cstr);
+	return L;
+}
+
 const char* toConstChar(string s){
 	return s.c_str();
 }

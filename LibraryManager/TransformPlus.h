@@ -34,7 +34,7 @@ public:
 	int toInt(CString cstr);
 	int toInt(string str);
 	int toInt(double dbl);
-
+	long toLong(CString cstr);
 	//const char*
 	
 };

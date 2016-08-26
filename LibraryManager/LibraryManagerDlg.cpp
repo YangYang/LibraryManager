@@ -223,6 +223,8 @@ void CLibraryManagerDlg::OnBnClickedOk()
 			{
 				MessageBox(_T("user"));
 				InterfaceForUser interfaceForUser;
+				interfaceForUser.loginUser=edit_username;
+				interfaceForUser.loginUserType=transformPlus.toCString(type);
 				this->ShowWindow(SW_HIDE);
 				interfaceForUser.DoModal();
 				this->ShowWindow(SW_SHOW);

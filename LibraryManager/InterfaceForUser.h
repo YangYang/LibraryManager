@@ -5,6 +5,7 @@
 #include <mysql.h>
 #include "Book.h"
 #include "List.h"
+#include <ctime>
 
 // InterfaceForUser 对话框
 
@@ -24,6 +25,8 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
+	CString loginUser;//登陆者的账号
+	CString loginUserType;//登陆者的种类
 	CString edit_search;
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedRadio1();
