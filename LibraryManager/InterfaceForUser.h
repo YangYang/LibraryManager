@@ -57,9 +57,19 @@ public:
 	CStatic control_book_about;
 	List<Book> list;//book 类的list对象
 	Book *thisNode;//选中的书籍
+	string TYPE;//显示的用户类型
+	string name;//显示的用户姓名
+	string username;//显示的用户名
 	CString book_ISBN;
 	CStatic control_book_ISBN;
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
 	void borrowBook(string ,string ,MYSQL );
+	CStatic control_name;
+	CStatic control_type;
+	CStatic control_username;
+	CString name_text;
+	CString type_text;
+	CString username_text;
+	virtual BOOL OnInitDialog();
 };

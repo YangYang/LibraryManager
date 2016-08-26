@@ -223,8 +223,26 @@ void CLibraryManagerDlg::OnBnClickedOk()
 			{
 				MessageBox(_T("user"));
 				InterfaceForUser interfaceForUser;
+				interfaceForUser.name=row[3];
+				interfaceForUser.username=row[1];
 				interfaceForUser.loginUser=edit_username;
 				interfaceForUser.loginUserType=transformPlus.toCString(type);
+				if(type=="1")
+				{
+					interfaceForUser.TYPE="本科生";
+				}
+				else if(type=="2")
+				{
+					interfaceForUser.TYPE="研究生";
+				}
+				else if(type=="3")
+				{
+					interfaceForUser.TYPE="博士生";
+				}
+				else if(type=="4")
+				{
+					interfaceForUser.TYPE="教师";
+				}
 				this->ShowWindow(SW_HIDE);
 				interfaceForUser.DoModal();
 				this->ShowWindow(SW_SHOW);

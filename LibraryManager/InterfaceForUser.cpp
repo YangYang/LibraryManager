@@ -26,8 +26,10 @@ InterfaceForUser::InterfaceForUser(CWnd* pParent /*=NULL*/)
 	, book_type(_T(""))
 	, book_about(_T(""))
 	, book_ISBN(_T(""))
+	, name_text(_T(""))
+	, type_text(_T(""))
+	, username_text(_T(""))
 {
-	thisNode=NULL;
 }
 
 InterfaceForUser::~InterfaceForUser()
@@ -58,6 +60,12 @@ void InterfaceForUser::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ABOUTBOOKTEXT, control_book_about);
 	DDX_Text(pDX, IDC_BOOKISBNTEXT, book_ISBN);
 	DDX_Control(pDX, IDC_BOOKISBNTEXT, control_book_ISBN);
+	DDX_Control(pDX, IDC_USERNAME, control_name);
+	DDX_Control(pDX, IDC_USERTYPE, control_type);
+	DDX_Control(pDX, IDC_USERUSERNAME, control_username);
+	DDX_Text(pDX, IDC_USERNAME, name_text);
+	DDX_Text(pDX, IDC_USERTYPE, type_text);
+	DDX_Text(pDX, IDC_USERUSERNAME, username_text);
 }
 
 
@@ -868,4 +876,20 @@ void InterfaceForUser::OnBnClickedButton2()
 	control_book_type.ShowWindow(SW_HIDE);
 	control_book_about.ShowWindow(SW_HIDE);
 	control_book_number.ShowWindow(SW_HIDE);
+}
+
+
+BOOL InterfaceForUser::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	// TODO:  在此添加额外的初始化
+	control_type.SetWindowText(transformPlus.toCString(TYPE));
+	control_type.ShowWindow(TRUE);
+	control_name.SetWindowText(transformPlus.toCString(name));
+	control_name.ShowWindow(TRUE);
+	control_username.SetWindowText(transformPlus.toCString(username));
+	control_username.ShowWindow(TRUE);
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// 异常: OCX 属性页应返回 FALSE
 }
