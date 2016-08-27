@@ -41,4 +41,5 @@ public:
 	CString edit_password;
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedButton1();
+	MYSQL connectMySQL();
 };

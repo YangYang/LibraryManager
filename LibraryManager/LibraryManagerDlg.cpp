@@ -275,3 +275,21 @@ void CLibraryManagerDlg::OnBnClickedButton1()
 	this->ShowWindow(SW_SHOW);
 	//MessageBox(_T("跳转至注册界面"));
 }
+
+MYSQL CLibraryManagerDlg::connectMySQL()
+{
+	MYSQL local_mysql;
+	mysql_init(&local_mysql);
+	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
+	{
+		MessageBox(_T("error"));
+		AfxMessageBox(_T("connect to databases failed!"));
+		AfxGetMainWnd()->PostMessage(WM_CLOSE,0,0);
+	}
+	else
+	{
+		//AfxMessageBox(_T("connect to database success!"));
+		mysql_query(&local_mysql,"set names'gb2312'");
+		return local_mysql;
+	}
+}

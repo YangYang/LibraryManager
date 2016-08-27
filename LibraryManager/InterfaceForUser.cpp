@@ -30,6 +30,8 @@ InterfaceForUser::InterfaceForUser(CWnd* pParent /*=NULL*/)
 	, type_text(_T(""))
 	, username_text(_T(""))
 {
+	thisNode=NULL;
+	thisUserBookNode=NULL;
 }
 
 InterfaceForUser::~InterfaceForUser()
@@ -66,6 +68,8 @@ void InterfaceForUser::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_USERNAME, name_text);
 	DDX_Text(pDX, IDC_USERTYPE, type_text);
 	DDX_Text(pDX, IDC_USERUSERNAME, username_text);
+	DDX_Control(pDX, IDC_EDIT1, control_edit_text);
+	DDX_Control(pDX, IDC_LIST3, user_book_list);
 }
 
 
@@ -80,6 +84,8 @@ BEGIN_MESSAGE_MAP(InterfaceForUser, CDialogEx)
 	ON_LBN_SELCHANGE(IDC_LIST1, &InterfaceForUser::OnLbnSelchangeList1)
 	ON_BN_CLICKED(IDC_BUTTON1, &InterfaceForUser::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &InterfaceForUser::OnBnClickedButton2)
+	ON_LBN_SELCHANGE(IDC_LIST3, &InterfaceForUser::OnLbnSelchangeList3)
+	ON_BN_CLICKED(IDC_BUTTON3, &InterfaceForUser::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 
@@ -91,8 +97,8 @@ END_MESSAGE_MAP()
 void InterfaceForUser::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	MYSQL local_mysql;
 	
+	MYSQL local_mysql;
 	mysql_init(&local_mysql);
 	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
 	{
@@ -115,13 +121,14 @@ void InterfaceForUser::OnBnClickedOk()
 		all_book_number=0;
 		CString cstr=transformPlus.toCString(all_book_number);
 		book_number=L"0";
-		UpdateData(FALSE);
+		//UpdateData(FALSE);
+		control_book_number.SetWindowText(L"0");
 		AfxMessageBox(_T("请选择搜索方式！"));
 		return ;
 	}
 	if(select_type==1)
 	{
-		//UpdateData(TRUE);
+		UpdateData(TRUE);
 		//每次搜索时都要清空链表
 		list.clearList();
 		sql_select.Format(_T("select * from book where bookName like \'%s\';"),  edit_search);
@@ -394,7 +401,8 @@ void InterfaceForUser::OnBnClickedOk()
 			{
 				book_number.Format(_T("%s"),cstr);
 				select_type=-1;
-				UpdateData(FALSE);
+				//UpdateData(FALSE);
+				control_book_number.SetWindowText(book_number);
 				return ;
 			}
 			else
@@ -481,6 +489,7 @@ void InterfaceForUser::OnBnClickedRadio4()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	GetDlgItem(IDC_EDIT1)->EnableWindow(FALSE);
+	GetDlgItem(IDOK)->EnableWindow(TRUE);
 	select_type=4;//可借查询
 	return ;
 }
@@ -532,6 +541,7 @@ void InterfaceForUser::OnLbnSelchangeList1()
 	CString cstrText;
 	int selectedTextNumber;
 	selectedTextNumber=select_list_box.GetCurSel();//获取当前选中列表项
+	//MessageBox(transformPlus.toCString(selectedTextNumber));
 	/*
 	根据selectTextNumber 检索list 中对应的节点，查找对应的isbn 查找对应的书籍的所有信息
 	*/
@@ -863,26 +873,110 @@ void InterfaceForUser::OnBnClickedButton1()
 }
 
 
-
+//刷新
 void InterfaceForUser::OnBnClickedButton2()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	OnInitDialog();
 	select_list_box.ResetContent();
-	control_book_name.ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_EDIT1)->SetWindowText(_T(""));
+	control_book_name.SetWindowText(_T(""));
+	control_book_press.SetWindowText(_T(""));
+	control_book_date.SetWindowText(_T(""));
+	control_book_ISBN.SetWindowText(_T(""));
+	control_book_type.SetWindowText(_T(""));
+	control_book_about.SetWindowText(_T(""));
+	control_book_number.SetWindowText(_T(""));
+	control_book_author.SetWindowText(_T(""));
+	thisNode=NULL;
+	thisUserBookNode=NULL;
+	CButton* radio=(CButton*)GetDlgItem(IDC_RADIO1);
+	radio->SetCheck(0);
+	radio=(CButton*)GetDlgItem(IDC_RADIO2);
+	radio->SetCheck(0);
+	radio=(CButton*)GetDlgItem(IDC_RADIO3);
+	radio->SetCheck(0);
+	radio=(CButton*)GetDlgItem(IDC_RADIO4);
+	radio->SetCheck(0);
+	/*control_book_name.ShowWindow(SW_HIDE);
 	control_book_author.ShowWindow(SW_HIDE);
 	control_book_press.ShowWindow(SW_HIDE);
 	control_book_date.ShowWindow(SW_HIDE);
 	control_book_ISBN.ShowWindow(SW_HIDE);
 	control_book_type.ShowWindow(SW_HIDE);
 	control_book_about.ShowWindow(SW_HIDE);
-	control_book_number.ShowWindow(SW_HIDE);
+	control_book_number.ShowWindow(SW_HIDE);*/
 }
 
+void InterfaceForUser::setUserBookMessage()
+{
+	MYSQL local_mysql;
+	mysql_init(&local_mysql);
+	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
+	{
+		MessageBox(_T("error"));
+		AfxMessageBox(_T("connect to databases failed!"));
+		return ;
+	}
+	else
+	{
+		//AfxMessageBox(_T("connect to database success!"));
+		mysql_query(&local_mysql,"set names'gb2312'");
+	}
+	CString sql_select;
+	sql_select.Format(_T("select * from user_book where username = \'%s\';"),loginUser);
+	string sql_Select=transformPlus.toString(sql_select);
+	const char  * sql=sql_Select.c_str();
+	int res=mysql_query(&local_mysql,sql);
+	MYSQL_RES * result;
+	MYSQL_ROW row;
+	if(res==0)
+	{
+		result=mysql_store_result(&local_mysql);
+		while(row=mysql_fetch_row(result))
+		{
+			//查找书籍名字
+			CString sql_book_name;
+			sql_book_name.Format(_T("select * from book where ISBN=\'%s\';"),transformPlus.toCString(row[2]));
+			string SQL=transformPlus.toString(sql_book_name);
+			const char  * Sql=SQL.c_str();
+			int Res=mysql_query(&local_mysql,Sql);
+			MYSQL_RES * Result;
+			MYSQL_ROW Row;
+			if(Res==0)
+			{
+				Result=mysql_store_result(&local_mysql);
+				Row=mysql_fetch_row(Result);
+				CString cstr=transformPlus.toCString(Row[3]);
+				int judge=user_book_list.InsertString(-1,cstr);
+				if(judge>=0)
+				{
+					userBook * newNode=new userBook(row[2],judge,Row[3]);
+					userBookList.add(newNode);
+					userBookList.p->next=NULL;
+				}
+				else
+				{
+					AfxMessageBox(_T("Out of memory!"));
+				}
+			}
+			else
+			{
+				AfxMessageBox(_T("error!!!!!!!"));
+				return ;
+			}
+		}
+	}
+	else
+	{
+		return ;
+	}
+}
 
 BOOL InterfaceForUser::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-
+	user_book_list.ResetContent();
 	// TODO:  在此添加额外的初始化
 	control_type.SetWindowText(transformPlus.toCString(TYPE));
 	control_type.ShowWindow(TRUE);
@@ -890,6 +984,86 @@ BOOL InterfaceForUser::OnInitDialog()
 	control_name.ShowWindow(TRUE);
 	control_username.SetWindowText(transformPlus.toCString(username));
 	control_username.ShowWindow(TRUE);
+	setUserBookMessage();
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
+}
+
+MYSQL InterfaceForUser::connectMySQL()
+{
+	MYSQL local_mysql;
+	mysql_init(&local_mysql);
+	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
+	{
+		MessageBox(_T("error"));
+		AfxMessageBox(_T("connect to databases failed!"));
+		//AfxGetMainWnd()->PostMessage(WM_CLOSE,0,0);
+	}
+	else
+	{
+		//AfxMessageBox(_T("connect to database success!"));
+		mysql_query(&local_mysql,"set names'gb2312'");
+		return local_mysql;
+	}
+}
+
+void InterfaceForUser::OnLbnSelchangeList3()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString cstrText;
+	int selectedTextNumber;
+	selectedTextNumber=user_book_list.GetCurSel();
+
+	userBook *head=userBookList.head;
+	//MessageBox(transformPlus.toCString(selectedTextNumber));
+	if(head==NULL)
+	{
+		AfxMessageBox(_T("error!"));
+		return ;
+	}
+	else
+	{
+		while(head)
+		{
+			if(head->reListPosition()==selectedTextNumber)
+			{
+				thisUserBookNode=head;
+				break;
+			}
+			head=head->next;
+		}
+	}
+	//MessageBox(transformPlus.toCString(thisUserBookNode->reBookName()));
+	
+
+}
+
+// 读者选中自己的书籍的详情
+void InterfaceForUser::OnBnClickedButton3()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	MYSQL local_mysql;
+	mysql_init(&local_mysql);
+	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
+	{
+		MessageBox(_T("error"));
+		AfxMessageBox(_T("connect to databases failed!"));
+		//AfxGetMainWnd()->PostMessage(WM_CLOSE,0,0);
+	}
+	else
+	{
+		//AfxMessageBox(_T("connect to database success!"));
+		mysql_query(&local_mysql,"set names'gb2312'");
+	}
+	if(thisUserBookNode==NULL)
+	{
+		MessageBox(L"您还未选择任何书籍！");
+		return ;
+	}
+	else
+	{
+		MessageBox((L"具体某本书籍的信息！"));
+		return ;
+	}
 }

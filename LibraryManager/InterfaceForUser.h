@@ -4,6 +4,7 @@
 #include "TransformPlus.h"
 #include <mysql.h>
 #include "Book.h"
+#include "userBook.h"
 #include "List.h"
 #include <ctime>
 
@@ -55,8 +56,10 @@ public:
 	CStatic control_book_date;
 	CStatic control_book_type;
 	CStatic control_book_about;
-	List<Book> list;//book 类的list对象
+	List<Book> list;//book 类的list对象，搜索出来的内容
+	List<userBook> userBookList;//用户的借阅信息
 	Book *thisNode;//选中的书籍
+	userBook *thisUserBookNode;//选中的用户的书籍
 	string TYPE;//显示的用户类型
 	string name;//显示的用户姓名
 	string username;//显示的用户名
@@ -72,4 +75,10 @@ public:
 	CString type_text;
 	CString username_text;
 	virtual BOOL OnInitDialog();
+	CEdit control_edit_text;
+	CListBox user_book_list;
+	void setUserBookMessage();
+	afx_msg void OnLbnSelchangeList3();
+	MYSQL connectMySQL();
+	afx_msg void OnBnClickedButton3();
 };
