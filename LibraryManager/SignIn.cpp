@@ -110,7 +110,7 @@ void SignIn::OnBnClickedOk()
 	{
 		type='4';
 	}
-	sql_insert.Format(_T("insert into user values (\'\', \'%s\', \'%s\', \'%s\' , \'%s\' , \'%s\',\'\' );"), new_username,new_password,new_name,new_unit,type);
+	sql_insert.Format(_T("insert into user values (\'\', \'%s\', \'%s\', \'%s\' , \'%s\' , \'%s\' , \'\', \'\', \'\');"), new_username,new_password,new_name,new_unit,type);
 	string sql_Insert=transformPlus.toString(sql_insert);
 	const char  * sql=sql_Insert.c_str();
 	if(mysql_query(&local_mysql,sql)==0)

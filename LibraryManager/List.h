@@ -57,5 +57,31 @@ public:
 			length++;
 		}
 	}
+	void del(T *t)
+	{
+		if(head==t)
+		{
+			T *q=head;
+			head=head->next;
+			delete q;
+			return ;
+		}
+		else
+		{
+			T *s=head;
+			T *q=head->next;
+			while(q)
+			{
+				if(q==t)
+				{
+					s->next=p->next;
+					delete p;
+					return ;
+				}
+				s=s->next;
+				q=q->next;
+			}
+		}
+	}
 };
 

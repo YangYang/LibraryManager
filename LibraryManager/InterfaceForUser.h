@@ -83,8 +83,11 @@ public:
 	afx_msg void OnBnClickedButton3();
 	afx_msg void OnBnClickedButton5();
 	afx_msg void OnBnClickedButton4();
-	int reduceBookNumber(string bookISBN,MYSQL local_mysql);//0 成功 ！1 失败
-	int addBookNumber(string bookISBN,MYSQL local_mysql);//0 成功 ！1 失败
-	int judgeTime(long reTime);//0 成功 ！1 失败
-	int delBookMessage(string bookISBN,MYSQL local_mysql);//0 成功 ！1 失败
+	int reduceBookNumber(string bookISBN,MYSQL local_mysql);//1 成功 ！0 失败
+	int reduceUserBookNumber(string username,MYSQL local_mysql);//1 成功 ！0 失败
+	int addBookNumber(string bookISBN,MYSQL local_mysql);//1 成功 ！0 失败
+	int judgeTime(long reTime);//1 成功 ！0 失败
+	int delBookMessage(string bookISBN,MYSQL local_mysql);//1 成功 ！0 失败
+	int addMistake(string username,MYSQL locai_mysql);//1 成功 ！0 失败
+	int addFineUser(CString username,MYSQL local_mysql);
 };

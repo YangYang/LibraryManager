@@ -647,6 +647,51 @@ int InterfaceForUser::reduceBookNumber(string bookISBN,MYSQL local_mysql)
 	}
 }
 
+//user 图书数量减一
+int InterfaceForUser::reduceUserBookNumber(string username,MYSQL local_mysql)
+{
+	CString sql_select;
+	sql_select.Format(_T("select * from user where username=\'%s\';"),transformPlus.toCString(username));
+	string temp=transformPlus.toString(sql_select);
+	const char * sql=temp.c_str();
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		res=mysql_store_result(&local_mysql);
+		row=mysql_fetch_row(res);
+		if(row)
+		{
+			int number =transformPlus.toInt(row[6]);
+			number--;
+			CString sql_update;
+
+			sql_update.Format(_T("update user set bookNumber=\'%s\' where username= \'%s\';"),transformPlus.toCString(number),transformPlus.toCString(username));
+			temp=transformPlus.toString(sql_update);
+			sql=temp.c_str();
+			if(mysql_query(&local_mysql,sql)==0)
+			{
+				return 1;
+			}
+			else
+			{
+				AfxMessageBox(_T("errorrrrrrr!"));
+				return 0;
+			}
+		}
+		else
+		{
+			AfxMessageBox(_T("error!!!!!!!!!!!!!!!"));
+			return 0;
+		}
+	}
+	else
+	{
+		AfxMessageBox(_T("er!"));
+		return 0;
+	}
+}
+
 //图书数量加一
 int InterfaceForUser::addBookNumber(string bookISBN,MYSQL local_mysql)
 {
@@ -826,7 +871,8 @@ void InterfaceForUser::borrowBook(string userType,string userBookNumber,MYSQL lo
 									int reJudge=reduceBookNumber(thisNode->reISBN(),local_mysql);
 									if(reJudge==1)
 									{
-										MessageBox(_T("借阅成功！"));   
+										MessageBox(_T("借阅成功！"));  
+										OnInitDialog();
 										return ;
 									}
 									else
@@ -1074,6 +1120,7 @@ void InterfaceForUser::setUserBookMessage()
 	}
 }
 
+
 BOOL InterfaceForUser::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -1091,7 +1138,7 @@ BOOL InterfaceForUser::OnInitDialog()
 	// 异常: OCX 属性页应返回 FALSE
 }
 
-MYSQL InterfaceForUser::connectMySQL()
+/*MYSQL InterfaceForUser::connectMySQL()
 {
 	MYSQL local_mysql;
 	mysql_init(&local_mysql);
@@ -1108,7 +1155,7 @@ MYSQL InterfaceForUser::connectMySQL()
 		return local_mysql;
 	}
 }
-
+*/
 
 //点击已借书籍
 void InterfaceForUser::OnLbnSelchangeList3()
@@ -1117,6 +1164,10 @@ void InterfaceForUser::OnLbnSelchangeList3()
 	CString cstrText;
 	int selectedTextNumber;
 	selectedTextNumber=user_book_list.GetCurSel();
+
+	CString selectedTextName;
+	user_book_list.GetText(selectedTextNumber, selectedTextName);
+	//MessageBox(selectedTextName);
 
 	userBook *head=userBookList.head;
 	//MessageBox(transformPlus.toCString(selectedTextNumber));
@@ -1129,7 +1180,7 @@ void InterfaceForUser::OnLbnSelchangeList3()
 	{
 		while(head)
 		{
-			if(head->reListPosition()==selectedTextNumber)
+			if(transformPlus.toCString(head->reBookName())==selectedTextName)
 			{
 				thisUserBookNode=head;
 				break;
@@ -1193,6 +1244,51 @@ int InterfaceForUser::judgeTime(long reTime)
 	}
 }
 
+//mistake加一
+int InterfaceForUser::addMistake(string username,MYSQL local_mysql)
+{
+	CString sql_select;
+	sql_select.Format(_T("select * from user where username = \'%s\';"),transformPlus.toCString(username));
+	string temp=transformPlus.toString(sql_select);
+	const char * sql=temp.c_str();
+	MYSQL_RES *res;
+	MYSQL_ROW row ;
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		res=mysql_store_result(&local_mysql);
+		row=mysql_fetch_row(res);
+		if(row)
+		{
+			int number =transformPlus.toInt(row[7]);
+			number ++;
+			CString sql_update;
+			sql_update.Format(_T("update user set mistake = \'%s\' where username = \'%s\' ;"),transformPlus.toCString(number),transformPlus.toCString(username));
+			temp=transformPlus.toString(sql_update);
+			sql=temp.c_str();
+			if(mysql_query(&local_mysql,sql)==0)
+			{
+				return 1;
+			}
+			else
+			{
+				AfxMessageBox(_T("error!"));
+				return 0;
+			}
+		}
+		else
+		{
+			AfxMessageBox(_T("error!"));
+			return 0;
+		}
+	}
+	else
+	{
+		AfxMessageBox(_T("error;"));
+		return 0;
+	}
+}
+
+
 //删除书籍记录
 int InterfaceForUser::delBookMessage(string bookISBN,MYSQL local_mysql)
 {
@@ -1208,6 +1304,55 @@ int InterfaceForUser::delBookMessage(string bookISBN,MYSQL local_mysql)
 		return 1;
 	}
 }
+
+//将用户添加进fineuser 名单/////////////////////////////////////////////
+int InterfaceForUser::addFineUser(CString username,MYSQL local_mysql)
+{
+	//判断该用户在不在表里
+	CString sql_query;
+	sql_query.Format(_T("select * from user_finetime where username = \'%s\' ;"),username);
+	string temp=transformPlus.toString(sql_query);
+	const char * sql = temp.c_str();
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		res=mysql_store_result(&local_mysql);
+		row=mysql_fetch_row(res);
+		if(row[0]>"0")
+		{
+			return 1;//用户在表里
+		}
+		else
+		{
+			//用户不在表里
+			time_t nowTime=time(0);
+			CString cstrNowTime;
+			cstrNowTime.Format(_T("%d"),nowTime);
+			long now_time=transformPlus.toLong(cstrNowTime);
+			long finetime=now_time+259200;
+			CString sql_insert;
+			sql_insert.Format(_T("insert into user_finetime (\'\' , \'%s\', \'%s\');"),username,transformPlus.toCString(finetime));
+			temp=transformPlus.toString(sql_insert);
+			sql=temp.c_str();
+			if(mysql_query(&local_mysql,sql)==0)
+			{
+				return 1;
+			}
+			else
+			{
+				AfxMessageBox(_T("error!"));
+				return 0;
+			}
+		}
+	}
+	else
+	{
+		AfxMessageBox(_T("error!"));
+		return 0;
+	}
+}
+
 //还书
 void InterfaceForUser::OnBnClickedButton4()
 {
@@ -1254,9 +1399,12 @@ void InterfaceForUser::OnBnClickedButton4()
 				{
 					int JUDGEDEL=delBookMessage(thisUserBookNode->reISBN(),local_mysql);
 					int JUDGEADD=addBookNumber(thisUserBookNode->reISBN(),local_mysql);
-					if(JUDGEDEL==JUDGEADD)
+					int JUDGUSER=reduceUserBookNumber(transformPlus.toString(loginUser),local_mysql);
+					if(JUDGEDEL==JUDGEADD&&JUDGUSER==JUDGEDEL)
 					{
 						MessageBox(L"还书成功！");
+						//userBookList.del(thisUserBookNode);
+						OnInitDialog();
 						return ;
 					}
 					else
@@ -1267,8 +1415,28 @@ void InterfaceForUser::OnBnClickedButton4()
 				}
 				else
 				{
-					MessageBox(L"过期了！");
-					return ;
+					int JUDGEDEL=delBookMessage(thisUserBookNode->reISBN(),local_mysql);
+					int JUDGEADD=addBookNumber(thisUserBookNode->reISBN(),local_mysql);
+					int JUDGUSER=reduceUserBookNumber(transformPlus.toString(loginUser),local_mysql);
+					if(JUDGEDEL==JUDGEADD&&JUDGUSER==JUDGEDEL)
+					{
+						MessageBox(L"还书成功！");
+						OnInitDialog();
+					}
+
+
+					int ADDMISTAKE=addMistake(transformPlus.toString(loginUser),local_mysql);
+					if(ADDMISTAKE==1)
+					{
+						////////////////判断用户的mistake 如果是三次 就addfinuser/////////////////////////////////////////////////////
+						MessageBox(L"您的应还日期已过，犯错次数加一，如果犯错次数达到3次，则将禁止借书一周！");
+						return ;
+					}
+					else
+					{
+						AfxMessageBox(_T("1332131321"));
+						return ;
+					}
 				}
 			}
 			else
@@ -1282,7 +1450,6 @@ void InterfaceForUser::OnBnClickedButton4()
 			AfxMessageBox(_T("error!"));
 			return ;
 		}
-		//judgeTime();
 		return ;
 	}
 }

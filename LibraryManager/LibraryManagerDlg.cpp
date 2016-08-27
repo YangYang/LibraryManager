@@ -203,7 +203,7 @@ void CLibraryManagerDlg::OnBnClickedOk()
 		//将数据库中password 即row[2]保存至password
 		if(!row)
 		{
-			AfxMessageBox(_T("查无此人！"));
+			AfxMessageBox(_T("账号输入错误！"));
 			return ;
 		}
 		string password=row[2];
@@ -223,7 +223,7 @@ void CLibraryManagerDlg::OnBnClickedOk()
 			}
 			else
 			{
-				MessageBox(_T("user"));
+				//MessageBox(_T("user"));
 				InterfaceForUser interfaceForUser;
 				interfaceForUser.name=row[3];
 				interfaceForUser.username=row[1];
@@ -247,11 +247,12 @@ void CLibraryManagerDlg::OnBnClickedOk()
 				}
 				this->ShowWindow(SW_HIDE);
 				interfaceForUser.DoModal();
-				this->ShowWindow(SW_SHOW);
-				control_edit_username.SetWindowText(_T(""));
-				control_edit_password.SetWindowText(_T(""));
+				//this->ShowWindow(SW_SHOW);
+				//control_edit_username.SetWindowText(_T(""));
+				//control_edit_password.SetWindowText(_T(""));
 				CLibraryManagerDlg main;
 				main.DoModal();
+
 				CDialogEx::OnOK();
 				//OnBnClickedOk();
 			}
