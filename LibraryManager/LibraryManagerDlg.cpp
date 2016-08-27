@@ -61,6 +61,8 @@ void CLibraryManagerDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_EDIT1, edit_username);
 	DDX_Text(pDX, IDC_EDIT2, edit_password);
+	DDX_Control(pDX, IDC_EDIT1, control_edit_username);
+	DDX_Control(pDX, IDC_EDIT2, control_edit_password);
 }
 
 BEGIN_MESSAGE_MAP(CLibraryManagerDlg, CDialogEx)
@@ -246,7 +248,12 @@ void CLibraryManagerDlg::OnBnClickedOk()
 				this->ShowWindow(SW_HIDE);
 				interfaceForUser.DoModal();
 				this->ShowWindow(SW_SHOW);
+				control_edit_username.SetWindowText(_T(""));
+				control_edit_password.SetWindowText(_T(""));
+				CLibraryManagerDlg main;
+				main.DoModal();
 				CDialogEx::OnOK();
+				//OnBnClickedOk();
 			}
 		}
 	}

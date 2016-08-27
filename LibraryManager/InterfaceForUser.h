@@ -81,4 +81,5 @@ public:
 	afx_msg void OnLbnSelchangeList3();
 	MYSQL connectMySQL();
 	afx_msg void OnBnClickedButton3();
+	afx_msg void OnBnClickedButton5();
 };

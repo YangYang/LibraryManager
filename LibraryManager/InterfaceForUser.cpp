@@ -86,6 +86,7 @@ BEGIN_MESSAGE_MAP(InterfaceForUser, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON2, &InterfaceForUser::OnBnClickedButton2)
 	ON_LBN_SELCHANGE(IDC_LIST3, &InterfaceForUser::OnLbnSelchangeList3)
 	ON_BN_CLICKED(IDC_BUTTON3, &InterfaceForUser::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_BUTTON5, &InterfaceForUser::OnBnClickedButton5)
 END_MESSAGE_MAP()
 
 
@@ -1066,4 +1067,12 @@ void InterfaceForUser::OnBnClickedButton3()
 		MessageBox((L"具体某本书籍的信息！"));
 		return ;
 	}
+}
+
+
+void InterfaceForUser::OnBnClickedButton5()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	//this->DestroyWindow( );
+	EndDialog(0);
 }

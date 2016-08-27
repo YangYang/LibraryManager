@@ -10,6 +10,7 @@
 #include "binary_log_types.h"
 #include "SignIn.h"
 #include "InterfaceForUser.h"
+#include "afxwin.h"
 // CLibraryManagerDlg ¶Ô»°¿ò
 class CLibraryManagerDlg : public CDialogEx
 {
@@ -42,4 +43,6 @@ public:
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedButton1();
 	MYSQL connectMySQL();
+	CEdit control_edit_username;
+	CEdit control_edit_password;
 };
