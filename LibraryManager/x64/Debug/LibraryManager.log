@@ -1,4 +1,4 @@
-﻿生成启动时间为 2016/8/27 21:58:19。
+﻿生成启动时间为 2016/8/28 16:37:04。
      1>项目“C:\Users\yangy\Documents\GitHub\LibraryManager\LibraryManager\LibraryManager.vcxproj”在节点 2 上(build 个目标)。
      1>InitializeBuildStatus:
          正在创建“x64\Debug\LibraryManager.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
@@ -6,6 +6,8 @@
          所有输出均为最新。
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /Od /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"x64\Debug\LibraryManager.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc100.pdb" /Gd /TP /errorReport:prompt InterfaceForUser.cpp
          InterfaceForUser.cpp
+     1>InterfaceForUser.cpp(1549): warning C4101: “res”: 未引用的局部变量
+     1>InterfaceForUser.cpp(1550): warning C4101: “row”: 未引用的局部变量
        ResourceCompile:
          所有输出均为最新。
        ManifestResourceCompile:
@@ -36,4 +38,4 @@
 
 生成成功。
 
-已用时间 00:00:06.32
+已用时间 00:00:05.88

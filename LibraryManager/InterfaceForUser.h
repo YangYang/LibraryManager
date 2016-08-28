@@ -90,4 +90,10 @@ public:
 	int delBookMessage(string bookISBN,MYSQL local_mysql);//1 成功 ！0 失败
 	int addMistake(string username,MYSQL locai_mysql);//1 成功 ！0 失败
 	int addFineUser(CString username,MYSQL local_mysql);
+	afx_msg void OnBnClickedButton6();
+	int judgeBookNumber(CString bookISBN,MYSQL local_mysql);
+	int addBookToAppointmentBookTable(CString username ,CString bookISBN,MYSQL local_mysql);
+	int judgeTheBookIsAppointment(CString username,CString bookISBN,MYSQL local_mysql);
+	int addUserBookNumber(CString username,MYSQL local_mysql);
+	int checkUserBookNumber(CString,MYSQL loca_mysql);
 };

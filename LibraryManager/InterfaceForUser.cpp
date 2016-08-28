@@ -88,6 +88,7 @@ BEGIN_MESSAGE_MAP(InterfaceForUser, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON3, &InterfaceForUser::OnBnClickedButton3)
 	ON_BN_CLICKED(IDC_BUTTON5, &InterfaceForUser::OnBnClickedButton5)
 	ON_BN_CLICKED(IDC_BUTTON4, &InterfaceForUser::OnBnClickedButton4)
+	ON_BN_CLICKED(IDC_BUTTON6, &InterfaceForUser::OnBnClickedButton6)
 END_MESSAGE_MAP()
 
 
@@ -133,7 +134,7 @@ void InterfaceForUser::OnBnClickedOk()
 		UpdateData(TRUE);
 		//每次搜索时都要清空链表
 		list.clearList();
-		sql_select.Format(_T("select * from book where bookName like \'%s\';"),  edit_search);
+		sql_select.Format(_T("select * from book where bookName like \'%%%s%%\';"),  edit_search);
 		string sql_Select=transformPlus.toString(sql_select);
 		const char  * sql=sql_Select.c_str();
 		int res=mysql_query(&local_mysql,sql);
@@ -738,6 +739,47 @@ int InterfaceForUser::addBookNumber(string bookISBN,MYSQL local_mysql)
 	}
 }
 
+//用户书籍数量加一
+int InterfaceForUser::addUserBookNumber(CString username,MYSQL local_mysql)
+{
+	CString sql_select;
+	sql_select.Format(_T("select * from user where username=\'%s\';"),username);
+	string temp=transformPlus.toString(sql_select);
+	const char * sql=temp.c_str();
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		res=mysql_store_result(&local_mysql);
+		row=mysql_fetch_row(res);
+		if(!row)
+		{
+			return 0;
+		}
+		string Number =transformPlus.toString(row[6]);
+		int number=transformPlus.toInt(Number);
+		number++;
+		Number=transformPlus.toString(number);
+		CString sql_update;
+		sql_update.Format(_T("update user set bookNumber=\'%s\' where username=\'%s\' ;"),transformPlus.toCString(Number),username);
+		temp=transformPlus.toString(sql_update);
+		sql=temp.c_str();
+		if(mysql_query(&local_mysql,sql)==0)
+		{
+			return 1;
+		}
+		else
+		{
+			AfxMessageBox(_T("errorrrr!"));
+			return 0;
+		}
+	}
+	else
+	{
+		AfxMessageBox(_T("error1"));
+		return 0;
+	}
+}
 
 //借书
 void InterfaceForUser::borrowBook(string userType,string userBookNumber,MYSQL local_mysql)
@@ -1452,4 +1494,233 @@ void InterfaceForUser::OnBnClickedButton4()
 		}
 		return ;
 	}
+}
+
+//判断书籍数量
+int InterfaceForUser::judgeBookNumber(CString bookISBN,MYSQL local_mysql)
+{
+	CString sql_query;
+	sql_query.Format(_T("select * from book where ISBN=\'%s\';"),bookISBN);
+	string temp=transformPlus.toString(sql_query);
+	const char * sql = temp.c_str();
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		res=mysql_store_result(&local_mysql);
+		row=mysql_fetch_row(res);
+		if(row)
+		{
+			int number = transformPlus.toInt(row[1]);
+			if(number >1)
+			{
+				return 1;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		else
+		{
+			AfxMessageBox(_T("errorrrrrrr"));
+			return 0;
+		}
+	}
+	else
+	{
+		AfxMessageBox(_T("error!"));
+		return 0 ;
+	}
+}
+
+//预约的书籍存入预约表
+int InterfaceForUser::addBookToAppointmentBookTable(CString username,CString bookISBN,MYSQL local_mysql)
+{
+	time_t nowTime=time(0);
+	CString cstrNowTime;
+	cstrNowTime.Format(_T("%d"),nowTime);
+	long now_time=transformPlus.toLong(cstrNowTime);
+	CString lastTime=transformPlus.toCString(now_time+259200);
+	CString sql_insert;
+	sql_insert.Format(_T("insert into appointment_book values (\'\',\'%s\',\'%s\',\'%s\');"),username,bookISBN,lastTime);
+	string temp=transformPlus.toString(sql_insert);
+	const char * sql=temp.c_str();
+	MYSQL_RES * res;
+	MYSQL_ROW row;
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		return 1;
+	}
+	else
+	{
+		AfxMessageBox(_T("error!!!"));
+		return 0;
+	}
+}
+
+//判断这本书是否被预约 1被预约过 0 没有被预约过
+int InterfaceForUser::judgeTheBookIsAppointment(CString username,CString bookISBN,MYSQL local_mysql)
+{
+	CString sql_select ;
+	sql_select.Format(_T("select * from appointment_book where username=\'%s\';"),username);
+	string temp=transformPlus.toString((sql_select));
+	const char * sql=temp.c_str();
+	MYSQL_RES *res ;
+	MYSQL_ROW  row;
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		res=mysql_store_result(&local_mysql);
+		while(row=mysql_fetch_row(res))
+		{
+			if(row[2]==transformPlus.toString(bookISBN))
+			{
+				return 1;
+			}
+		}
+		return 0;
+	}
+	else
+	{
+		AfxMessageBox(_T("error!"));
+		return 0;
+	}
+}
+
+//判断读者书籍数是否超额
+int InterfaceForUser::checkUserBookNumber(CString username,MYSQL local_mysql)
+{
+	CString sql_select;
+	sql_select.Format(_T("select * from user where username= \'%s\';"),username);
+	string temp=transformPlus.toString(sql_select);
+	const char * sql=temp.c_str();
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		res=mysql_store_result(&local_mysql);
+		row=mysql_fetch_row(res);
+		if(row)
+		{
+			string userType=row[5];
+			string userBookNumber=row[6];
+			string staticNumber;
+			if(userType=="1")
+			{
+				staticNumber="4";
+			}
+			else if(userType=="2")
+			{
+				staticNumber="6";
+			}
+			else if(userType=="3")
+			{
+				staticNumber="10";
+			}
+			else if(userType=="4")
+			{
+				staticNumber="999999";
+			}
+			if(userBookNumber>=staticNumber)
+			{
+				MessageBox(L"借书量已达上限，请归还部分书籍后进行借阅！");
+				return 0;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	else
+	{
+		return 0;
+	}
+}
+//预约
+void InterfaceForUser::OnBnClickedButton6()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if(thisNode==NULL)
+	{
+		MessageBox(L"您还没有选取书籍！");
+		return ;
+	}
+	//判断此人有没有借过这本书
+	MYSQL local_mysql;
+	mysql_init(&local_mysql);
+	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
+	{
+		MessageBox(_T("error"));
+		AfxMessageBox(_T("connect to databases failed!"));
+		//AfxGetMainWnd()->PostMessage(WM_CLOSE,0,0);
+	}
+	else
+	{
+		//AfxMessageBox(_T("connect to database success!"));
+		mysql_query(&local_mysql,"set names'gb2312'");
+	}
+	CString sql_select;
+	sql_select.Format(_T("select * from user_book where username = \'%s\'"),loginUser);
+	string temp=transformPlus.toString(sql_select);
+	const char * sql=temp.c_str();
+	MYSQL_RES * res;
+	MYSQL_ROW row;
+	if (mysql_query(&local_mysql,sql)==0)
+	{
+		res=mysql_store_result(&local_mysql);
+		while(row=mysql_fetch_row(res))
+		{
+			if(row[3]==thisNode->reISBN())
+			{
+				MessageBox(L"您已借阅此书籍！");
+				return ;
+			}
+		}
+		if(judgeTheBookIsAppointment(loginUser,transformPlus.toCString(thisNode->reISBN()),local_mysql)==1)
+		{
+			//判断是否被预约
+			AfxMessageBox(_T("您已预约这本书！"));
+			return ;
+		}
+		//判断读者书籍数量
+		int checkuserbook= checkUserBookNumber(loginUser,local_mysql);
+		if(checkuserbook==0)
+		{
+			return ;
+		}
+		//判断书籍数量
+		int judge=judgeBookNumber(transformPlus.toCString(thisNode->reISBN()),local_mysql);
+		if(judge==1)
+		{
+			int judgeUserBook=addUserBookNumber(loginUser,local_mysql);
+			int judugeBookNumber=reduceBookNumber(thisNode->reISBN(),local_mysql);
+			int judgeAdd=addBookToAppointmentBookTable(loginUser,transformPlus.toCString(thisNode->reISBN()),local_mysql);
+				if(judgeUserBook==judugeBookNumber&&1==judgeAdd)
+			{
+				MessageBox(L"预约成功！");
+				return ;
+			}
+			else
+			{
+					AfxMessageBox(_T("预约失败！"));
+				return ;
+			}
+		}
+		else
+		{
+			AfxMessageBox(_T("此书籍馆藏量不足！"));
+			return ;
+		}
+	}
+	else
+	{
+		AfxMessageBox(_T("error!"));
+		return ;
+	}
+//判断书籍数量，是否可以预约
 }
