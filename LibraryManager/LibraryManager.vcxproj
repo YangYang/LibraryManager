@@ -183,6 +183,7 @@
     <None Include="res\LibraryManager.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AboutYourBookMessage.h" />
     <ClInclude Include="binary_log_funcs.h" />
     <ClInclude Include="binary_log_types.h" />
     <ClInclude Include="Book.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="userBook.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AboutYourBookMessage.cpp" />
     <ClCompile Include="Book.cpp" />
     <ClCompile Include="InterfaceForUser.cpp" />
     <ClCompile Include="LibraryManager.cpp" />

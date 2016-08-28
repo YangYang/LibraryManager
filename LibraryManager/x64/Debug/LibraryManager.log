@@ -1,13 +1,13 @@
-﻿生成启动时间为 2016/8/28 16:37:04。
+﻿生成启动时间为 2016/8/28 21:07:10。
      1>项目“C:\Users\yangy\Documents\GitHub\LibraryManager\LibraryManager\LibraryManager.vcxproj”在节点 2 上(build 个目标)。
      1>InitializeBuildStatus:
          正在创建“x64\Debug\LibraryManager.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
        ClCompile:
          所有输出均为最新。
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /Od /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"x64\Debug\LibraryManager.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc100.pdb" /Gd /TP /errorReport:prompt InterfaceForUser.cpp
-         InterfaceForUser.cpp
-     1>InterfaceForUser.cpp(1549): warning C4101: “res”: 未引用的局部变量
-     1>InterfaceForUser.cpp(1550): warning C4101: “row”: 未引用的局部变量
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /Od /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"x64\Debug\LibraryManager.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc100.pdb" /Gd /TP /errorReport:prompt AboutYourBookMessage.cpp
+         AboutYourBookMessage.cpp
+     1>AboutYourBookMessage.cpp(135): warning C4996: 'gmtime': This function or variable may be unsafe. Consider using gmtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\time.inl(99) : 参见“gmtime”的声明
        ResourceCompile:
          所有输出均为最新。
        ManifestResourceCompile:
@@ -15,6 +15,7 @@
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\yangy\Documents\GitHub\LibraryManager\x64\Debug\LibraryManager.exe" /INCREMENTAL /NOLOGO libmysql.lib /MANIFEST /ManifestFile:"x64\Debug\LibraryManager.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\yangy\Documents\GitHub\LibraryManager\x64\Debug\LibraryManager.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"wWinMainCRTStartup" /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\yangy\Documents\GitHub\LibraryManager\x64\Debug\LibraryManager.lib" /MACHINE:X64 x64\Debug\LibraryManager.res
          x64\Debug\LibraryManager.exe.embed.manifest.res
+         x64\Debug\AboutYourBookMessage.obj
          x64\Debug\Book.obj
          x64\Debug\InterfaceForUser.obj
          x64\Debug\LibraryManager.obj
@@ -38,4 +39,4 @@
 
 生成成功。
 
-已用时间 00:00:05.88
+已用时间 00:00:06.03

@@ -1162,7 +1162,7 @@ void InterfaceForUser::setUserBookMessage()
 	}
 }
 
-
+//初始化dlg的最后一个虚函数
 BOOL InterfaceForUser::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -1257,6 +1257,11 @@ void InterfaceForUser::OnBnClickedButton3()
 	}
 	else
 	{
+		
+		AboutYourBookMessage aboutYourBookMessage;
+		aboutYourBookMessage.loginUser=loginUser;
+		aboutYourBookMessage.list.add(thisUserBookNode);
+		aboutYourBookMessage.DoModal();
 		MessageBox((L"具体某本书籍的信息！"));
 		return ;
 	}
