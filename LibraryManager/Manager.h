@@ -11,6 +11,8 @@
 #include "badGuyList.h"
 #include "managerBook.h"
 #include "managerUser.h"
+#include <string>
+#include "SignIn.h"
 
 // Manager 对话框
 
@@ -47,6 +49,7 @@ public:
 	MYSQL local_mysql;
 	void connectMysql();
 	List<appointmentUser> appointmentList;
+	appointmentUser * appThisNode;
 	void insertAppointmentMessageToListBox();
 	TransformPlus transformPlus;
 	string temp;
@@ -57,11 +60,29 @@ public:
 
 	List<badGuyList> BadGuyList;
 	void insertBadGuyToListBox();
-	List<managerBook> managerBookList;
+	List<managerBook> managerBookList;//统计书籍
 	void insertAllBookToListBox();
 	int allBooksNumber;
-	List<managerUser> managerUserList;
+	List<managerUser> managerUserList;//统计读者
+	managerUser * mUThisNode;	
 	void insertAllUserToListBox();
 	int allUsersNumber;
 	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedRadio7();
+	CButton control_button2;
+	CButton control_button3;
+	virtual BOOL OnInitDialog();
+	void insertUserToListBox();//查找用户用到的List
+	CString edit_text;
+	void insertUserHaveTheBookToListBox();//以书查人用到的List
+	List<Book> userBookList;
+	void insertUserBookListToListBox();//以人查书时用到的List
+	CButton control_search_type;
+	afx_msg void OnBnClickedButton3();
+	void acceptBorrowBook();
+	afx_msg void OnLbnSelchangeList1();
+	int addMistake(CString username);
+	int delAppointmentMessage(CString username,CString bookISBN);
+	afx_msg void OnBnClickedButton2();
+	int sendMessageToUser(CString ,CString );
 };

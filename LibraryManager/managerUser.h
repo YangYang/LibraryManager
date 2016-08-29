@@ -18,6 +18,7 @@ public:
 		return listPosition;
 	}
 	managerUser(CString,CString ,CString);
+	managerUser(CString,CString);
 	~managerUser(void);
 	managerUser * next;
 };

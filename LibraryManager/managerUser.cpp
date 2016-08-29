@@ -9,6 +9,12 @@ managerUser::managerUser(CString UserName,CString Name,CString ListPosition)
 	listPosition=ListPosition;
 }
 
+managerUser::managerUser(CString UserName ,CString ListPosition)
+{
+	username=UserName;
+	name="";
+	listPosition=ListPosition;
+}
 
 managerUser::~managerUser(void)
 {

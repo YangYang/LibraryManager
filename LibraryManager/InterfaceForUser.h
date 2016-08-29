@@ -97,4 +97,6 @@ public:
 	int judgeTheBookIsAppointment(CString username,CString bookISBN,MYSQL local_mysql);
 	int addUserBookNumber(CString username,MYSQL local_mysql);
 	int checkUserBookNumber(CString,MYSQL loca_mysql);
+	int judgeMessage();
+	int delBlockMessage(CString );
 };

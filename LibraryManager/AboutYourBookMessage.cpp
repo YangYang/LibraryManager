@@ -138,7 +138,7 @@ BOOL AboutYourBookMessage::OnInitDialog()
 				reBookTime=transformPlus.toCString(s);
 				control_return_book_time.SetWindowText(reBookTime);
 				control_return_book_time.ShowWindow(TRUE);
-				return TRUE;
+				return TRUE; 
 			}
 			else
 			{

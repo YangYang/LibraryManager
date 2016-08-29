@@ -517,7 +517,7 @@ void InterfaceForUser::OnEnChangeEdit1()
 	// TODO:  在此添加控件通知处理程序代码
 }
 
-//显示图书信息
+//点击 list box control
 void InterfaceForUser::OnLbnSelchangeList1()
 {
 	// TODO: 在此添加控件通知处理程序代码
@@ -1162,12 +1162,100 @@ void InterfaceForUser::setUserBookMessage()
 	}
 }
 
+//删除登录用户的信息
+int InterfaceForUser::delBlockMessage(CString usrename)
+{
+	MYSQL local_mysql;
+	mysql_init(&local_mysql);
+	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
+	{
+		MessageBox(_T("error"));
+		AfxMessageBox(_T("connect to databases failed!"));
+		return 0;
+	}
+	else
+	{
+		//AfxMessageBox(_T("connect to database success!"));
+		mysql_query(&local_mysql,"set names'gb2312'");
+	}
+
+	CString sql_update;
+	sql_update.Format(_T("update user set message= \'\' where usrename=\'%s\' ;"),transformPlus.toCString(username));
+	MessageBox(sql_update);
+	string temp=transformPlus.toString(sql_update);
+	const char * sql=temp.c_str();
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+//判断登录用户有没有信息
+int InterfaceForUser::judgeMessage()
+{
+	MYSQL local_mysql;
+	mysql_init(&local_mysql);
+	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
+	{
+		MessageBox(_T("error"));
+		AfxMessageBox(_T("connect to databases failed!"));
+		return 0;
+	}
+	else
+	{
+		//AfxMessageBox(_T("connect to database success!"));
+		mysql_query(&local_mysql,"set names'gb2312'");
+	}
+
+	CString sql_select;
+	sql_select.Format(_T("select * from user where username = \'%s\';"),loginUser);
+	string temp=transformPlus.toString(sql_select);
+	const char * sql=temp.c_str();
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		res=mysql_store_result(&local_mysql);
+		row=mysql_fetch_row(res);
+		if(row)
+		{
+			if(row[9])
+			{
+				MessageBox(transformPlus.toCString(row[9]));
+
+				return 1;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+		else
+		{
+			AfxMessageBox(_T("error!"));
+			return 0;
+		}
+	}
+	else
+	{
+		AfxMessageBox(_T("error!"));
+		return 0;
+	}
+}
+
+
 //初始化dlg的最后一个虚函数
 BOOL InterfaceForUser::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 	user_book_list.ResetContent();
 	// TODO:  在此添加额外的初始化
+	//judgeMessage();
+//	int judge=delBlockMessage(loginUser);
+
 	control_type.SetWindowText(transformPlus.toCString(TYPE));
 	control_type.ShowWindow(TRUE);
 	control_name.SetWindowText(transformPlus.toCString(name));
