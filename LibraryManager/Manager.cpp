@@ -86,6 +86,7 @@ void Manager::OnBnClickedRadio1()
 	control_button2.ShowWindow(SW_SHOW);
 	control_button3.SetWindowText(L"禁止借阅");
 	control_button3.ShowWindow(SW_SHOW);
+	GetDlgItem(IDC_EDIT1)->SetWindowText((LPCTSTR)"");
 	search_type=1;
 
 	//insertAppointmentMessageToListBox();
@@ -269,14 +270,18 @@ void Manager::OnBnClickedRadio2()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	control_edit.EnableWindow(TRUE);
+	if(edit_text=="")
+	{
+		MessageBox(L"请输入该书籍ISBN");
+	}
+	search_type=2;
 	control_button2.SetWindowText(L"借阅详情");
 	control_button2.ShowWindow(SW_HIDE);
 	control_button3.SetWindowText(L"退出");
 	control_button3.ShowWindow(SW_SHOW);
+	control_list_box.ResetContent();
 
-
-	MessageBox(L"请输入该书籍ISBN");
-	search_type=2;
+	
 }
 void Manager::insertUserHaveTheBookToListBox()
 {
@@ -316,13 +321,16 @@ void Manager::OnBnClickedRadio5()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	control_edit.EnableWindow(TRUE);
+	if(edit_text=="")
+	{
+		MessageBox(L"请输入想要查询学生的学号");
+	}
 	control_button2.SetWindowText(L"借阅详情");
 	control_button2.ShowWindow(SW_SHOW);
 	control_button3.SetWindowText(L"退出");
 	control_button3.ShowWindow(SW_SHOW);
+	control_list_box.ResetContent();
 
-
-	MessageBox(L"请输入想要查询学生的学号");
 	search_type=5;
 } 
 void Manager::insertUserBookListToListBox()
@@ -368,6 +376,8 @@ void Manager::OnBnClickedRadio3()
 	control_button2.ShowWindow(SW_SHOW);
 	control_button3.SetWindowText(L"退出");
 	control_button3.ShowWindow(SW_SHOW);
+	GetDlgItem(IDC_EDIT1)->SetWindowText((LPCTSTR)"");
+	control_list_box.ResetContent();
 	search_type=3;
 	//insertBadGuyToListBox();
 }
@@ -410,6 +420,8 @@ void Manager::OnBnClickedRadio4()
 	control_button2.ShowWindow(SW_SHOW);
 	control_button3.SetWindowText(L"删除书籍");
 	control_button3.ShowWindow(SW_SHOW);
+	GetDlgItem(IDC_EDIT1)->SetWindowText((LPCTSTR)"");
+	control_list_box.ResetContent();
 	search_type=4;
 	//insertAllBookToListBox();
 }
@@ -455,6 +467,8 @@ void Manager::OnBnClickedRadio6()
 	control_button2.ShowWindow(SW_SHOW);
 	control_button3.SetWindowText(L"退出");
 	control_button3.ShowWindow(SW_SHOW);
+	GetDlgItem(IDC_EDIT1)->SetWindowText((LPCTSTR)"");
+	control_list_box.ResetContent();
 	search_type=6;;
 	//insertAllUserToListBox();
 }
@@ -474,11 +488,11 @@ void Manager::insertAllUserToListBox()
 		{
 			allUsersNumber++;
 			int judge=control_list_box.InsertString(-1,transformPlus.toCString(row[1]));
-			managerUser * newNode=new managerUser(transformPlus.toCString(row[1]),transformPlus.toCString(row[3]),transformPlus.toCString(judge));
-			managerUserList.add(newNode);
-			managerUserList.p->next=NULL;
+			badGuyList * newNode=new badGuyList(transformPlus.toCString(row[1]),transformPlus.toCString(judge),transformPlus.toCString(row[3]));
+			BadGuyList.add(newNode);
+			BadGuyList.p->next=NULL;
 		}
-		if(managerUserList.head==NULL)
+		if(BadGuyList.head==NULL)
 		{
 			AfxMessageBox(_T("未查到读者"));
 			return ;
@@ -495,12 +509,16 @@ void Manager::insertAllUserToListBox()
 void Manager::OnBnClickedRadio7()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	MessageBox(L"请输入用户名");
+	if(edit_text=="")
+	{
+		MessageBox(L"请输入用户名");
+	}
 	control_edit.EnableWindow(TRUE);
 	control_button2.SetWindowText(L"用户详情");
 	control_button2.ShowWindow(SW_SHOW);
 	control_button3.SetWindowText(L"删除用户");
 	control_button3.ShowWindow(SW_SHOW);
+	control_list_box.ResetContent();
 	search_type=7;
 }
 void Manager::insertUserToListBox()
@@ -518,11 +536,10 @@ void Manager::insertUserToListBox()
 		if(row)
 		{
 			int judge=control_list_box.InsertString(-1,transformPlus.toCString(row[1]));
-
-			managerUser * newNode=new managerUser(transformPlus.toCString(row[1]),transformPlus.toCString(row[3]),transformPlus.toCString(judge));
-			managerUserList.add(newNode);
-			managerUserList.p->next=NULL;
-			if(managerUserList.head==NULL)
+			badGuyList * newNode=new badGuyList(transformPlus.toCString(row[1]),transformPlus.toCString(judge),transformPlus.toCString(row[3]));
+			BadGuyList.add(newNode);
+			BadGuyList.p->next=NULL;
+			if(BadGuyList.head==NULL)
 			{
 				AfxMessageBox(_T("未查到该用户"));
 				return ;
@@ -680,11 +697,18 @@ void Manager::OnBnClickedButton2()
 	else if(search_type==6)
 	{
 		//用户统计
-
+		BadGuys badguys;
+		badguys.username=bGThisNode->reUsername();
+		badguys.DoModal();
+		return ;
 	}
 	else if(search_type==7)
 	{
 		//用户搜索
+		BadGuys badguys;
+		badguys.username=bGThisNode->reUsername();
+		badguys.DoModal();
+		return ;
 	}
 	else
 	{
@@ -829,12 +853,31 @@ void Manager::OnLbnSelchangeList1()
 	}
 	else if(search_type==6)
 	{
-		//用户统计
-
+		//用户统计 因为数据类型与badguy 相同，所以用 查看违约的代码
+		badGuyList *head=BadGuyList.head;
+		while(head)
+		{
+			if(head->rePosition()==transformPlus.toCString(selectedTextNumber))
+			{
+				bGThisNode=head;
+				break;
+			}
+			head=head->next;
+		}
 	}
 	else if(search_type==7)
 	{
 		//用户搜索
+		badGuyList *head=BadGuyList.head;
+		while(head)
+		{
+			if(head->rePosition()==transformPlus.toCString(selectedTextNumber))
+			{
+				bGThisNode=head;
+				break;
+			}
+			head=head->next;
+		}
 	}
 	else
 	{
