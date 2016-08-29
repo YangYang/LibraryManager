@@ -69,6 +69,21 @@
     <ClInclude Include="AboutYourBookMessage.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Manager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="appointmentUser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="badGuyList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="managerBook.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="managerUser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LibraryManager.cpp">
@@ -99,6 +114,21 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="AboutYourBookMessage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="appointmentUser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="badGuyList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="managerBook.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="managerUser.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -11,6 +11,8 @@
 #include "SignIn.h"
 #include "InterfaceForUser.h"
 #include "afxwin.h"
+#include "Manager.h"
+
 // CLibraryManagerDlg ¶Ô»°¿ò
 class CLibraryManagerDlg : public CDialogEx
 {

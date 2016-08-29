@@ -184,6 +184,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AboutYourBookMessage.h" />
+    <ClInclude Include="appointmentUser.h" />
+    <ClInclude Include="badGuyList.h" />
     <ClInclude Include="binary_log_funcs.h" />
     <ClInclude Include="binary_log_types.h" />
     <ClInclude Include="Book.h" />
@@ -191,6 +193,9 @@
     <ClInclude Include="LibraryManager.h" />
     <ClInclude Include="LibraryManagerDlg.h" />
     <ClInclude Include="List.h" />
+    <ClInclude Include="Manager.h" />
+    <ClInclude Include="managerBook.h" />
+    <ClInclude Include="managerUser.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SignIn.h" />
     <ClInclude Include="stdafx.h" />
@@ -200,11 +205,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutYourBookMessage.cpp" />
+    <ClCompile Include="appointmentUser.cpp" />
+    <ClCompile Include="badGuyList.cpp" />
     <ClCompile Include="Book.cpp" />
     <ClCompile Include="InterfaceForUser.cpp" />
     <ClCompile Include="LibraryManager.cpp" />
     <ClCompile Include="LibraryManagerDlg.cpp" />
     <ClCompile Include="List.cpp" />
+    <ClCompile Include="Manager.cpp" />
+    <ClCompile Include="managerBook.cpp" />
+    <ClCompile Include="managerUser.cpp" />
     <ClCompile Include="SignIn.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

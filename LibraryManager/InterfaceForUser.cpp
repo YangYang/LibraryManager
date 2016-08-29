@@ -1262,7 +1262,6 @@ void InterfaceForUser::OnBnClickedButton3()
 		aboutYourBookMessage.loginUser=loginUser;
 		aboutYourBookMessage.list.add(thisUserBookNode);
 		aboutYourBookMessage.DoModal();
-		MessageBox((L"具体某本书籍的信息！"));
 		return ;
 	}
 }

@@ -218,7 +218,11 @@ void CLibraryManagerDlg::OnBnClickedOk()
 		{
 			if(type=="0")
 			{
-				MessageBox(_T("admin"));
+				//MessageBox(_T("admin"));
+				Manager manager;
+				this->ShowWindow(SW_HIDE);
+				manager.DoModal();
+				this->ShowWindow(SW_SHOW);
 				return ;
 			}
 			else
@@ -229,7 +233,7 @@ void CLibraryManagerDlg::OnBnClickedOk()
 				interfaceForUser.username=row[1];
 				interfaceForUser.loginUser=edit_username;
 				interfaceForUser.loginUserType=transformPlus.toCString(type);
-				if(type=="1")
+				if(type=="1") 
 				{
 					interfaceForUser.TYPE="±¾¿ÆÉú";
 				}
