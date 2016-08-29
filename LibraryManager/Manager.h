@@ -12,7 +12,9 @@
 #include "managerBook.h"
 #include "managerUser.h"
 #include <string>
+#include "AboutUserBook.h"
 #include "SignIn.h"
+#include "BadGuys.h"
 
 // Manager 对话框
 
@@ -59,6 +61,7 @@ public:
 	CListBox control_list_box;
 
 	List<badGuyList> BadGuyList;
+	badGuyList * bGThisNode;
 	void insertBadGuyToListBox();
 	List<managerBook> managerBookList;//统计书籍
 	void insertAllBookToListBox();
@@ -76,6 +79,7 @@ public:
 	CString edit_text;
 	void insertUserHaveTheBookToListBox();//以书查人用到的List
 	List<Book> userBookList;
+	Book *uBThisNode;
 	void insertUserBookListToListBox();//以人查书时用到的List
 	CButton control_search_type;
 	afx_msg void OnBnClickedButton3();

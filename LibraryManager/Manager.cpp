@@ -270,7 +270,7 @@ void Manager::OnBnClickedRadio2()
 	// TODO: 在此添加控件通知处理程序代码
 	control_edit.EnableWindow(TRUE);
 	control_button2.SetWindowText(L"借阅详情");
-	control_button2.ShowWindow(SW_SHOW);
+	control_button2.ShowWindow(SW_HIDE);
 	control_button3.SetWindowText(L"退出");
 	control_button3.ShowWindow(SW_SHOW);
 
@@ -653,16 +653,24 @@ void Manager::OnBnClickedButton2()
 	else if(search_type==2)
 	{
 		//以书查人
-		//借阅详情
+		//借阅详情已经隐藏
 	}
 	else if(search_type==5)
 	{
 		//以人查书
+		//借阅详情
+		AboutUserBook aboutUserBook;
+		aboutUserBook.ISBN=transformPlus.toCString(uBThisNode->reISBN());
+		aboutUserBook.DoModal();
+		return ;
 	}
 	else if(search_type==3)
 	{
 		//查看违约情况
-
+		BadGuys badguys;
+		badguys.username=bGThisNode->reUsername();
+		badguys.DoModal();
+		return ;
 	}
 	else if(search_type==4)
 	{
@@ -720,10 +728,12 @@ void Manager::OnBnClickedButton3()
 	else if(search_type==5)
 	{
 		//以人查书
+		CDialogEx::OnCancel();
 	}
 	else if(search_type==3)
 	{
 		//查看违约情况
+		CDialogEx::OnCancel();
 
 	}
 	else if(search_type==4)
@@ -734,7 +744,7 @@ void Manager::OnBnClickedButton3()
 	else if(search_type==6)
 	{
 		//用户统计
-
+		CDialogEx::OnCancel();
 	}
 	else if(search_type==7)
 	{
@@ -786,10 +796,30 @@ void Manager::OnLbnSelchangeList1()
 	else if(search_type==5)
 	{
 		//以人查书
+		Book *head=userBookList.head;
+		while(head)
+		{
+			if(head->reListPosition()==transformPlus.toInt(selectedTextNumber))
+			{
+				uBThisNode=head;
+				break;
+			}
+			head=head->next;
+		}
 	}
 	else if(search_type==3)
 	{
 		//查看违约情况
+		badGuyList *head=BadGuyList.head;
+		while(head)
+		{
+			if(head->rePosition()==transformPlus.toCString(selectedTextNumber))
+			{
+				bGThisNode=head;
+				break;
+			}
+			head=head->next;
+		}
 
 	}
 	else if(search_type==4)
