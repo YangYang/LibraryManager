@@ -23,7 +23,11 @@ Manager::Manager(CWnd* pParent /*=NULL*/)
 	, edit_text(_T(""))
 {
 	bGThisNode=NULL;
-
+	appThisNode=NULL;
+	mBThisNode=NULL;
+	mUThisNode=NULL;
+	uBThisNode=NULL;
+	fGThisNode=NULL;
 }
 
 Manager::~Manager()
@@ -433,7 +437,7 @@ void Manager::OnBnClickedRadio4()
 	control_button2.ShowWindow(SW_SHOW);
 	control_button3.SetWindowText(L"删除书籍");
 	control_button3.ShowWindow(SW_SHOW);
-	GetDlgItem(IDC_EDIT1)->SetWindowText((LPCTSTR)"");
+	GetDlgItem(IDC_EDIT1)->SetWindowText(transformPlus.toCString(""));
 	control_list_box.ResetContent();
 	search_type=4;
 	//insertAllBookToListBox();
@@ -482,7 +486,7 @@ void Manager::OnBnClickedRadio6()
 	control_button2.ShowWindow(SW_SHOW);
 	control_button3.SetWindowText(L"退出");
 	control_button3.ShowWindow(SW_SHOW);
-	GetDlgItem(IDC_EDIT1)->SetWindowText((LPCTSTR)"");
+	GetDlgItem(IDC_EDIT1)->SetWindowText(transformPlus.toCString(""));
 	control_list_box.ResetContent();
 	search_type=6;;
 	//insertAllUserToListBox();
@@ -716,6 +720,11 @@ void Manager::OnBnClickedButton3()
 	else if (search_type==1)
 	{
 		//查看预约
+		if(appThisNode==NULL)
+		{
+			AfxMessageBox(_T("您还未选择信息！"));
+			return ;
+		}
 		CString message;
 		message=L"您的预约信息已被驳回，请重新借阅或预约";
 		sendMessageToUser(appThisNode->reUsername(),message);
@@ -796,6 +805,12 @@ void Manager::OnBnClickedButton3()
 void Manager::OnLbnSelchangeList1()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	bGThisNode=NULL;
+	appThisNode=NULL;
+	mBThisNode=NULL;
+	mUThisNode=NULL;
+	uBThisNode=NULL;
+	fGThisNode=NULL;
 	CString cstrText;
 	int selectedTextNumber;
 	selectedTextNumber=control_list_box.GetCurSel();//获取当前点击项的位置
@@ -912,6 +927,7 @@ void Manager::OnLbnSelchangeList1()
 void Manager::OnLbnSelchangeList3()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	fGThisNode=NULL;
 	CString cstrText;
 	int selectedTextNumber;
 	selectedTextNumber=control_fine_list_box.GetCurSel();//获取当前点击项的位置
@@ -995,7 +1011,7 @@ void Manager::OnBnClickedButton2()
 	else if(search_type==4)
 	{
 		//书籍统计
-		if(uBThisNode==NULL)
+		if(mBThisNode==NULL)
 		{
 			AfxMessageBox(_T("Adadafawftqwtwqet"));
 			return ;
@@ -1044,6 +1060,11 @@ void Manager::OnBnClickedButton2()
 void Manager::OnBnClickedButton4()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	if(fGThisNode==NULL)
+	{
+		AfxMessageBox(_T("您还未选择学生！"));
+		return ;
+	}
 	FineGuyMessage fineGuyMessage;
 	fineGuyMessage.theGuy=fGThisNode;
 	fineGuyMessage.DoModal();
@@ -1054,6 +1075,11 @@ void Manager::OnBnClickedButton4()
 void Manager::OnBnClickedButton1()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	if(fGThisNode==NULL)
+	{
+		AfxMessageBox(_T("您还未选择学生！"));
+		return ;
+	}
 	CString sql_query;
 	sql_query.Format(_T("delete from user_finetime where username=\'%s\' and recoverTime=\'%s\';"),fGThisNode->reUsername(),fGThisNode->reFineTime());
 	temp=transformPlus.toString(sql_query);
