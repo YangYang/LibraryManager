@@ -66,7 +66,6 @@ void AboutYourBookMessage::OnBnClickedOk()
 BOOL AboutYourBookMessage::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-
 	// TODO:  在此添加额外的初始化
 	MYSQL local_mysql;
 	mysql_init(&local_mysql);
@@ -74,11 +73,9 @@ BOOL AboutYourBookMessage::OnInitDialog()
 	{
 		MessageBox(_T("error"));
 		AfxMessageBox(_T("connect to databases failed!"));
-		//AfxGetMainWnd()->PostMessage(WM_CLOSE,0,0);
 	}
 	else
 	{
-		//AfxMessageBox(_T("connect to database success!"));
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 	CString bookName;

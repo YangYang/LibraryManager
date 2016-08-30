@@ -1,4 +1,5 @@
 #pragma once
+//±»³Í·£ÈË µÄ list
 class FineGuyList
 {
 public:

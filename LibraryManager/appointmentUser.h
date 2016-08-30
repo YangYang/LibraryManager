@@ -1,4 +1,5 @@
 #pragma once
+//预约者信息的List
 class appointmentUser
 {
 public:

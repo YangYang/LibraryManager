@@ -37,7 +37,6 @@ END_MESSAGE_MAP()
 BOOL FineGuyMessage::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-
 	// TODO:  在此添加额外的初始化
 	MYSQL local_mysql;
 	mysql_init(&local_mysql);
@@ -48,7 +47,6 @@ BOOL FineGuyMessage::OnInitDialog()
 	}
 	else
 	{
-		//AfxMessageBox(_T("connect to database success!"));
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 	CString sql_query;

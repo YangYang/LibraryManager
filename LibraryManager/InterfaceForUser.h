@@ -10,6 +10,7 @@
 #include "AboutYourBookMessage.h"
 
 // InterfaceForUser 对话框
+//用户的DLG
 
 class InterfaceForUser : public CDialogEx
 {
@@ -35,23 +36,25 @@ public:
 	afx_msg void OnBnClickedRadio1();
 
 	TransformPlus transformPlus;
-	int select_type;
+	int select_type;//搜索方式
 	afx_msg void OnBnClickedRadio2();
 	afx_msg void OnBnClickedRadio3();
 	afx_msg void OnBnClickedRadio4();
-	int all_book_number;
+	int all_book_number;//书籍总数
 	CListBox select_list_box;
 	CString book_number;
 	CButton control_search_button;
 	afx_msg void OnEnChangeEdit1();
 	CStatic control_book_number;
 	afx_msg void OnLbnSelchangeList1();
+	//value 变量
 	CString book_name;
 	CString book_author;
 	CString book_press;
 	CString book_date;
 	CString book_type;
 	CString book_about;
+	//control变量
 	CStatic control_book_name;
 	CStatic control_book_author;
 	CStatic control_book_press;
@@ -70,12 +73,14 @@ public:
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
 	void borrowBook(string ,string ,MYSQL );
+	//stitic text 变量
 	CStatic control_name;
 	CStatic control_type;
 	CStatic control_username;
 	CString name_text;
 	CString type_text;
 	CString username_text;
+	//DLG初始化时 的函数
 	virtual BOOL OnInitDialog();
 	CEdit control_edit_text;
 	CListBox user_book_list;
@@ -104,4 +109,6 @@ public:
 	CString fineTime;
 	int judgeUserWrongTime();
 	int addUserToFineUserTable();
+	afx_msg void OnLbnDblclkList1();
+	afx_msg void OnLbnDblclkList3();
 };

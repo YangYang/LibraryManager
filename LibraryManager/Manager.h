@@ -20,6 +20,7 @@
 #include "AboutTheBookMessage.h"
 
 // Manager 对话框
+//管理员界面DLG
 
 class Manager : public CDialogEx
 {
@@ -45,33 +46,47 @@ public:
 	afx_msg void OnBnClickedRadio6();
 	int search_type;
 	CEdit control_edit;
+	//control 变量
 	int control_appointment;
 	int control_book_to_user;
 	int control_user_to_book;
 	int control_weiyue;
 	int control_calculate_book;
 	int control_calculate_user;
+	// 连接mysql 数据、函数
 	MYSQL local_mysql;
 	void connectMysql();
-	List<appointmentUser> appointmentList;
-	appointmentUser * appThisNode;
-	void insertAppointmentMessageToListBox();
-	TransformPlus transformPlus;
 	string temp;
 	const char * sql;
 	MYSQL_RES *res;
 	MYSQL_ROW row;
-	CListBox control_list_box;
-
+	//选取某条信息所需要的List 和对应类型的指针
+	//预约用户
+	List<appointmentUser> appointmentList;
+	appointmentUser * appThisNode;
+	//违约用户
 	List<badGuyList> BadGuyList;
 	badGuyList * bGThisNode;
-	void insertBadGuyToListBox();
-	List<managerBook> managerBookList;//统计书籍
+	//统计书籍
+	List<managerBook> managerBookList;
 	managerBook * mBThisNode;
+	//统计读者
+	List<managerUser> managerUserList;
+	managerUser * mUThisNode;	
+	//被惩罚用户
+	List<FineGuyList> FineGuiesList;
+	FineGuyList *fGThisNode;
+	//点击 用户List 
+	List<Book> userBookList;
+	Book *uBThisNode;
+
+	TransformPlus transformPlus;//万能转换类
+	
+	CListBox control_list_box;
+	void insertAppointmentMessageToListBox();
+	void insertBadGuyToListBox();
 	void insertAllBookToListBox();
 	int allBooksNumber;
-	List<managerUser> managerUserList;//统计读者
-	managerUser * mUThisNode;	
 	void insertAllUserToListBox();
 	int allUsersNumber;
 	afx_msg void OnBnClickedOk();
@@ -82,8 +97,6 @@ public:
 	void insertUserToListBox();//查找用户用到的List
 	CString edit_text;
 	void insertUserHaveTheBookToListBox();//以书查人用到的List
-	List<Book> userBookList;
-	Book *uBThisNode;
 	void insertUserBookListToListBox();//以人查书时用到的List
 	CButton control_search_type;
 	afx_msg void OnBnClickedButton3();
@@ -93,8 +106,6 @@ public:
 	int delAppointmentMessage(CString username,CString bookISBN);
 	afx_msg void OnBnClickedButton2();
 	int sendMessageToUser(CString ,CString );
-	List<FineGuyList> FineGuiesList;
-	FineGuyList *fGThisNode;
 	void insertFineGuiesListToListBox();
 	CListBox control_fine_list_box;
 	afx_msg void OnLbnSelchangeList3();
@@ -102,5 +113,5 @@ public:
 	afx_msg void OnBnClickedButton1();
 	int delBook(CString book_ISBN);
 	int delUser(CString username);
-
+	afx_msg void OnLbnDblclkList1();
 };

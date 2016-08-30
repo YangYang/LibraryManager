@@ -1,4 +1,5 @@
 #pragma once
+//Î¥Ô¼ÈËµÄList
 class badGuyList
 {
 public:

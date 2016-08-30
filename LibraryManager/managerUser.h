@@ -1,4 +1,5 @@
 #pragma once
+//管理用户List
 class managerUser
 {
 public:

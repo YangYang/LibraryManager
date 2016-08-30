@@ -1,4 +1,5 @@
 #pragma once
+//π‹¿Ì ÈºÆList
 class managerBook
 {
 public:

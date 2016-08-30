@@ -89,6 +89,8 @@ BEGIN_MESSAGE_MAP(InterfaceForUser, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON5, &InterfaceForUser::OnBnClickedButton5)
 	ON_BN_CLICKED(IDC_BUTTON4, &InterfaceForUser::OnBnClickedButton4)
 	ON_BN_CLICKED(IDC_BUTTON6, &InterfaceForUser::OnBnClickedButton6)
+	ON_LBN_DBLCLK(IDC_LIST1, &InterfaceForUser::OnLbnDblclkList1)
+	ON_LBN_DBLCLK(IDC_LIST3, &InterfaceForUser::OnLbnDblclkList3)
 END_MESSAGE_MAP()
 
 
@@ -111,11 +113,9 @@ void InterfaceForUser::OnBnClickedOk()
 	}
 	else
 	{
-		//AfxMessageBox(_T("connect to database success!"));
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 	CString sql_select;
-	
 	//图书信息list,被选中的Node 置空！
 	select_list_box.ResetContent();
 	thisNode=NULL;
@@ -151,8 +151,6 @@ void InterfaceForUser::OnBnClickedOk()
 					string bookISBN=row[7];
 					CString cstr=transformPlus.toCString(bookName);
 					int judge=select_list_box.InsertString(-1,cstr);
-
-
 					//将图书数据存入list
 					if(judge>=0)
 					{
@@ -222,8 +220,6 @@ void InterfaceForUser::OnBnClickedOk()
 					string bookISBN=row[7];
 					CString cstr=transformPlus.toCString(bookName);
 					int judge=select_list_box.InsertString(-1,cstr);
-
-
 					//将图书数据存入list
 					if(judge>=0)
 					{
@@ -367,13 +363,10 @@ void InterfaceForUser::OnBnClickedOk()
 					AddString(LPCTSTR);Unicode编码
 					CString 也是Unicode编码
 					*/
-					
 					string bookName=row[3];
 					string bookISBN=row[7];
 					CString cstr=transformPlus.toCString(bookName);
 					int judge=select_list_box.InsertString(-1,cstr);
-
-
 					//将图书数据存入list
 					if(judge>=0)
 					{
@@ -414,7 +407,6 @@ void InterfaceForUser::OnBnClickedOk()
 				UpdateData(FALSE);
 				return ;
 			}
-			
 		}
 		else
 		{
@@ -863,7 +855,6 @@ void InterfaceForUser::borrowBook(string userType,string userBookNumber,MYSQL lo
 							}
 							else
 							{
-								//AfxMessageBox(_T("connect to database success!"));
 								mysql_query(&local_mysql,"set names'gb2312'");
 							}
 							//应还时间reTime
@@ -972,8 +963,6 @@ void InterfaceForUser::borrowBook(string userType,string userBookNumber,MYSQL lo
 2.判断书籍数量是否大于1
 3.存入对应表单
 4.已有书籍数量减一
-
-
 */
 
 int InterfaceForUser::judgeUserInFineListOrNot()
@@ -987,7 +976,6 @@ int InterfaceForUser::judgeUserInFineListOrNot()
 	}
 	else
 	{
-		//AfxMessageBox(_T("connect to database success!"));
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 
@@ -1068,7 +1056,6 @@ void InterfaceForUser::OnBnClickedButton1()
 			row=mysql_fetch_row(result);
 			if(row)
 			{
-				
 				string userType=row[5];
 				string userBookNumber=row[6];
 				//本科生
@@ -1143,14 +1130,6 @@ void InterfaceForUser::OnBnClickedButton2()
 	radio->SetCheck(0);
 	radio=(CButton*)GetDlgItem(IDC_RADIO4);
 	radio->SetCheck(0);
-	/*control_book_name.ShowWindow(SW_HIDE);
-	control_book_author.ShowWindow(SW_HIDE);
-	control_book_press.ShowWindow(SW_HIDE);
-	control_book_date.ShowWindow(SW_HIDE);
-	control_book_ISBN.ShowWindow(SW_HIDE);
-	control_book_type.ShowWindow(SW_HIDE);
-	control_book_about.ShowWindow(SW_HIDE);
-	control_book_number.ShowWindow(SW_HIDE);*/
 }
 
 void InterfaceForUser::setUserBookMessage()
@@ -1165,7 +1144,6 @@ void InterfaceForUser::setUserBookMessage()
 	}
 	else
 	{
-		//AfxMessageBox(_T("connect to database success!"));
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 	CString sql_select;
@@ -1231,7 +1209,6 @@ int InterfaceForUser::delBlockMessage(CString usrename)
 	}
 	else
 	{
-		//AfxMessageBox(_T("connect to database success!"));
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 
@@ -1262,7 +1239,6 @@ int InterfaceForUser::judgeMessage()
 	}
 	else
 	{
-		//AfxMessageBox(_T("connect to database success!"));
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 
@@ -1309,9 +1285,6 @@ BOOL InterfaceForUser::OnInitDialog()
 	CDialogEx::OnInitDialog();
 	user_book_list.ResetContent();
 	// TODO:  在此添加额外的初始化
-	//judgeMessage();
-//	int judge=delBlockMessage(loginUser);
-
 	control_type.SetWindowText(transformPlus.toCString(TYPE));
 	control_type.ShowWindow(TRUE);
 	control_name.SetWindowText(transformPlus.toCString(name));
@@ -1326,25 +1299,6 @@ BOOL InterfaceForUser::OnInitDialog()
 	// 异常: OCX 属性页应返回 FALSE
 }
 
-/*MYSQL InterfaceForUser::connectMySQL()
-{
-	MYSQL local_mysql;
-	mysql_init(&local_mysql);
-	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
-	{
-		MessageBox(_T("error"));
-		AfxMessageBox(_T("connect to databases failed!"));
-		//AfxGetMainWnd()->PostMessage(WM_CLOSE,0,0);
-	}
-	else
-	{
-		//AfxMessageBox(_T("connect to database success!"));
-		mysql_query(&local_mysql,"set names'gb2312'");
-		return local_mysql;
-	}
-}
-*/
-
 //点击已借书籍
 void InterfaceForUser::OnLbnSelchangeList3()
 {
@@ -1358,7 +1312,6 @@ void InterfaceForUser::OnLbnSelchangeList3()
 	//MessageBox(selectedTextName);
 
 	userBook *head=userBookList.head;
-	//MessageBox(transformPlus.toCString(selectedTextNumber));
 	if(head==NULL)
 	{
 		AfxMessageBox(_T("error!"));
@@ -1376,7 +1329,6 @@ void InterfaceForUser::OnLbnSelchangeList3()
 			head=head->next;
 		}
 	}
-	//MessageBox(transformPlus.toCString(thisUserBookNode->reBookName()));
 }
 
 // 读者选中自己的书籍的详情
@@ -1389,11 +1341,9 @@ void InterfaceForUser::OnBnClickedButton3()
 	{
 		MessageBox(_T("error"));
 		AfxMessageBox(_T("connect to databases failed!"));
-		//AfxGetMainWnd()->PostMessage(WM_CLOSE,0,0);
 	}
 	else
 	{
-		//AfxMessageBox(_T("connect to database success!"));
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 	if(thisUserBookNode==NULL)
@@ -1403,7 +1353,6 @@ void InterfaceForUser::OnBnClickedButton3()
 	}
 	else
 	{
-		
 		AboutYourBookMessage aboutYourBookMessage;
 		aboutYourBookMessage.loginUser=loginUser;
 		aboutYourBookMessage.list.add(thisUserBookNode);
@@ -1497,7 +1446,7 @@ int InterfaceForUser::delBookMessage(string bookISBN,MYSQL local_mysql)
 	}
 }
 
-//将用户添加进fineuser 名单/////////////////////////////////////////////
+//将用户添加进fineuser 名单
 int InterfaceForUser::addFineUser(CString username,MYSQL local_mysql)
 {
 	//判断该用户在不在表里
@@ -1555,11 +1504,9 @@ int InterfaceForUser::judgeUserWrongTime()
 	{
 		MessageBox(_T("error"));
 		AfxMessageBox(_T("connect to databases failed!"));
-		//AfxGetMainWnd()->PostMessage(WM_CLOSE,0,0);
 	}
 	else
 	{
-		//AfxMessageBox(_T("connect to database success!"));
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 
@@ -1602,11 +1549,9 @@ int InterfaceForUser::addUserToFineUserTable()
 	{
 		MessageBox(_T("error"));
 		AfxMessageBox(_T("connect to databases failed!"));
-		//AfxGetMainWnd()->PostMessage(WM_CLOSE,0,0);
 	}
 	else
 	{
-		//AfxMessageBox(_T("connect to database success!"));
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 
@@ -1649,11 +1594,9 @@ void InterfaceForUser::OnBnClickedButton4()
 		{
 			MessageBox(_T("error"));
 			AfxMessageBox(_T("connect to databases failed!"));
-			//AfxGetMainWnd()->PostMessage(WM_CLOSE,0,0);
 		}
 		else
 		{
-			//AfxMessageBox(_T("connect to database success!"));
 			mysql_query(&local_mysql,"set names'gb2312'");
 		}
 		CString sql_select;
@@ -1681,7 +1624,6 @@ void InterfaceForUser::OnBnClickedButton4()
 					if(JUDGEDEL==JUDGEADD&&JUDGUSER==JUDGEDEL)
 					{
 						MessageBox(L"还书成功！");
-						//userBookList.del(thisUserBookNode);
 						OnInitDialog();
 						return ;
 					}
@@ -1921,11 +1863,9 @@ void InterfaceForUser::OnBnClickedButton6()
 	{
 		MessageBox(_T("error"));
 		AfxMessageBox(_T("connect to databases failed!"));
-		//AfxGetMainWnd()->PostMessage(WM_CLOSE,0,0);
 	}
 	else
 	{
-		//AfxMessageBox(_T("connect to database success!"));
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 	CString sql_select;
@@ -1987,4 +1927,20 @@ void InterfaceForUser::OnBnClickedButton6()
 		return ;
 	}
 //判断书籍数量，是否可以预约
+}
+
+
+void InterfaceForUser::OnLbnDblclkList1()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	OnLbnSelchangeList1();
+
+}
+
+
+void InterfaceForUser::OnLbnDblclkList3()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	OnLbnSelchangeList3();
+	OnBnClickedButton3();
 }

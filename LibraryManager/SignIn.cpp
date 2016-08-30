@@ -88,7 +88,6 @@ void SignIn::OnBnClickedOk()
 	}
 	else
 	{
-		//AfxMessageBox(_T("connect to database success!"));
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 	UpdateData(TRUE);

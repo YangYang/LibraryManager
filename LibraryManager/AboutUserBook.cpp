@@ -48,11 +48,10 @@ BOOL AboutUserBook::OnInitDialog()
 	}
 	else
 	{
-		//AfxMessageBox(_T("connect to database success!"));
 		mysql_query(&local_mysql,"set names'gb2312'");
 	}
 	CString sql_query;
-	sql_query.Format(_T("select * from book where ISBN=\'%s\';"),ISBN);//transformPlus.toCString(userBookMessage->reISBN()));
+	sql_query.Format(_T("select * from book where ISBN=\'%s\';"),ISBN);
 	string temp=transformPlus.toString(sql_query);
 	const char * sql=temp.c_str();
 	MYSQL_RES	*res;

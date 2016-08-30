@@ -6,6 +6,7 @@
 
 
 // AboutTheBookMessage 对话框
+// 管理员查看书籍信息DLG
 
 class AboutTheBookMessage : public CDialogEx
 {

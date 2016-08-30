@@ -5,7 +5,7 @@
 #include "afxwin.h"
 
 // SignIn ¶Ô»°¿ò
-
+// ×¢²áDLG
 class SignIn : public CDialogEx
 {
 	DECLARE_DYNAMIC(SignIn)

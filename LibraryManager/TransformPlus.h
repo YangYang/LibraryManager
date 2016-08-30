@@ -34,8 +34,15 @@ public:
 	int toInt(CString cstr);
 	int toInt(string str);
 	int toInt(double dbl);
+
+	//long
 	long toLong(CString cstr);
 	//const char*
 	
+	//系统时间戳格式化
+	/*CString timeToCString(CString cstr);
+	CString timeToCString(long number);
+	string timeToString(CString cstr);
+	string timeToString(long long);*/
 };
 

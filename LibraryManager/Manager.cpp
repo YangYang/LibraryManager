@@ -62,6 +62,7 @@ BEGIN_MESSAGE_MAP(Manager, CDialogEx)
 	ON_LBN_SELCHANGE(IDC_LIST3, &Manager::OnLbnSelchangeList3)
 	ON_BN_CLICKED(IDC_BUTTON4, &Manager::OnBnClickedButton4)
 	ON_BN_CLICKED(IDC_BUTTON1, &Manager::OnBnClickedButton1)
+	ON_LBN_DBLCLK(IDC_LIST1, &Manager::OnLbnDblclkList1)
 END_MESSAGE_MAP()
 
 //通用函数
@@ -440,7 +441,6 @@ void Manager::OnBnClickedRadio4()
 	GetDlgItem(IDC_EDIT1)->SetWindowText(transformPlus.toCString(""));
 	control_list_box.ResetContent();
 	search_type=4;
-	//insertAllBookToListBox();
 }
 void Manager::insertAllBookToListBox()
 {
@@ -463,7 +463,6 @@ void Manager::insertAllBookToListBox()
 			managerBookList.add(newNode);
 			managerBookList.p->next=NULL;
 		}
-		//MessageBox(transformPlus.toCString(allBooksNumber));
 		if(managerBookList.head==NULL)
 		{
 			AfxMessageBox(_T("未查到书籍"));
@@ -672,7 +671,6 @@ void Manager::OnBnClickedOk()
 		AfxMessageBox(_T("error!@"));
 		return ;
 	}
-
 	//CDialogEx::OnOK();
 }
 
@@ -1094,4 +1092,12 @@ void Manager::OnBnClickedButton1()
 	}
 	control_fine_list_box.ResetContent();
 	insertFineGuiesListToListBox();
+}
+
+
+void Manager::OnLbnDblclkList1()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	OnLbnSelchangeList1();
+	OnBnClickedButton2();
 }

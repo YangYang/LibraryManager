@@ -8,6 +8,7 @@
 #include <string>
 
 // AboutYourBookMessage 对话框
+//登陆者的书籍信息 DLG
 
 class AboutYourBookMessage : public CDialogEx
 {

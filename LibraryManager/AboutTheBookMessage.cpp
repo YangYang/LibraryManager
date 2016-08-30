@@ -33,7 +33,7 @@ END_MESSAGE_MAP()
 
 // AboutTheBookMessage 消息处理程序
 
-
+//加载dialiog
 BOOL AboutTheBookMessage::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();

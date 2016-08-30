@@ -6,6 +6,7 @@
 
 
 // BadGuys 对话框
+//违约者信息DLG
 
 class BadGuys : public CDialogEx
 {

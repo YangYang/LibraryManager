@@ -5,7 +5,7 @@
 
 
 // FineGuyMessage 对话框
-
+// 被惩罚人的 DLG
 class FineGuyMessage : public CDialogEx
 {
 	DECLARE_DYNAMIC(FineGuyMessage)
