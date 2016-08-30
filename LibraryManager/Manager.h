@@ -17,6 +17,7 @@
 #include "BadGuys.h"
 #include "FineGuyList.h"
 #include "FineGuyMessage.h"
+#include "AboutTheBookMessage.h"
 
 // Manager 对话框
 
@@ -66,6 +67,7 @@ public:
 	badGuyList * bGThisNode;
 	void insertBadGuyToListBox();
 	List<managerBook> managerBookList;//统计书籍
+	managerBook * mBThisNode;
 	void insertAllBookToListBox();
 	int allBooksNumber;
 	List<managerUser> managerUserList;//统计读者
@@ -98,4 +100,7 @@ public:
 	afx_msg void OnLbnSelchangeList3();
 	afx_msg void OnBnClickedButton4();
 	afx_msg void OnBnClickedButton1();
+	int delBook(CString book_ISBN);
+	int delUser(CString username);
+
 };

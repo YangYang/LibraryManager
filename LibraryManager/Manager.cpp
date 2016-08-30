@@ -22,6 +22,7 @@ Manager::Manager(CWnd* pParent /*=NULL*/)
 	, control_calculate_user(0)
 	, edit_text(_T(""))
 {
+	bGThisNode=NULL;
 
 }
 
@@ -404,8 +405,16 @@ void Manager::insertBadGuyToListBox()
 		}
 		if(BadGuyList.head==NULL)
 		{
-			MessageBox(L"暂时没有预约信息！");
-			return ;
+			if(search_type==1)
+			{
+				MessageBox(L"暂时没有预约信息！");
+				return ;
+			}
+			else if(search_type==3)
+			{
+				MessageBox(L"暂时没有违约信息！");
+				return ;
+			}
 		}
 	}
 	else
@@ -433,6 +442,7 @@ void Manager::insertAllBookToListBox()
 {
 	managerBookList.clearList();
 	allBooksNumber=0;
+	control_list_box.ResetContent();
 	connectMysql();
 	CString sql_query;
 	sql_query.Format(_T("select * from book;"));
@@ -449,6 +459,7 @@ void Manager::insertAllBookToListBox()
 			managerBookList.add(newNode);
 			managerBookList.p->next=NULL;
 		}
+		//MessageBox(transformPlus.toCString(allBooksNumber));
 		if(managerBookList.head==NULL)
 		{
 			AfxMessageBox(_T("未查到书籍"));
@@ -529,6 +540,7 @@ void Manager::insertUserToListBox()
 {
 	connectMysql();
 	managerUserList.clearList();
+	control_list_box.ResetContent();
 	CString sql_query;
 	sql_query.Format(_T("select * from user where username = \'%s\' ;"),edit_text);
 	temp=transformPlus.toString(sql_query);
@@ -679,76 +691,21 @@ BOOL Manager::OnInitDialog()
 	// 异常: OCX 属性页应返回 FALSE
 }
 
-
-
-void Manager::OnBnClickedButton2()
+int Manager::delBook(CString book_ISBN)
 {
-	// TODO: 在此添加控件通知处理程序代码
-	if(search_type==-1)
+	CString sql_del;
+	sql_del.Format(_T("delete from book where ISBN=\'%s\';"),book_ISBN);
+	temp=transformPlus.toString(sql_del);
+	sql=temp.c_str();
+	if(mysql_query(&local_mysql,sql)==0)
 	{
-		this->ShowWindow(SW_HIDE);
-		SignIn signIn;
-		signIn.DoModal();
-		this->ShowWindow(SW_SHOW);
-	}
-	else if (search_type==1)
-	{
-		//查看预约
-		acceptBorrowBook();
-		insertAppointmentMessageToListBox();
-		return ;
-	} 
-	else if(search_type==2)
-	{
-		//以书查人
-		//借阅详情已经隐藏
-	}
-	else if(search_type==5)
-	{
-		//以人查书
-		//借阅详情
-		AboutUserBook aboutUserBook;
-		aboutUserBook.ISBN=transformPlus.toCString(uBThisNode->reISBN());
-		aboutUserBook.DoModal();
-		return ;
-	}
-	else if(search_type==3)
-	{
-		//查看违约情况
-		BadGuys badguys;
-		badguys.username=bGThisNode->reUsername();
-		badguys.DoModal();
-		return ;
-	}
-	else if(search_type==4)
-	{
-		//书籍统计
-
-	}
-	else if(search_type==6)
-	{
-		//用户统计
-		BadGuys badguys;
-		badguys.username=bGThisNode->reUsername();
-		badguys.DoModal();
-		return ;
-	}
-	else if(search_type==7)
-	{
-		//用户搜索
-		BadGuys badguys;
-		badguys.username=bGThisNode->reUsername();
-		badguys.DoModal();
-		return ;
+		return 1;
 	}
 	else
 	{
-		AfxMessageBox(_T("error!@"));
-		return ;
+		return 0;
 	}
 }
-
-
 void Manager::OnBnClickedButton3()
 {
 	// TODO: 在此添加控件通知处理程序代码
@@ -794,7 +751,18 @@ void Manager::OnBnClickedButton3()
 	else if(search_type==4)
 	{
 		//书籍统计
-
+		if(uBThisNode==NULL)
+		{
+			AfxMessageBox(_T("您还为选取任何书籍"));
+			return ;
+		}
+		int i=delBook(transformPlus.toCString(uBThisNode->reISBN()));
+		if(i==1)
+		{
+			MessageBox(L"删除成功！");
+			insertAllBookToListBox();
+			return ;
+		}
 	}
 	else if(search_type==6)
 	{
@@ -804,6 +772,18 @@ void Manager::OnBnClickedButton3()
 	else if(search_type==7)
 	{
 		//用户搜索
+		if(bGThisNode==NULL)
+		{
+			AfxMessageBox(_T("您还为选取任何书籍"));
+			return ;
+		}
+		int i=delUser(bGThisNode->reUsername());
+		if(i==1)
+		{
+			MessageBox(L"删除成功！");
+			insertUserToListBox();
+			return ;
+		}
 	}
 	else
 	{
@@ -880,7 +860,18 @@ void Manager::OnLbnSelchangeList1()
 	else if(search_type==4)
 	{
 		//书籍统计
-
+		managerBook *head=managerBookList.head;
+		//MessageBox(transformPlus.toCString(userBookList.head->reListPosition()));
+		while(head)
+		{
+			if(head->reListBookPosition()==transformPlus.toCString(selectedTextNumber))
+			{
+				mBThisNode=head;
+				break;
+			}
+			head=head->next;
+			
+		}
 	}
 	else if(search_type==6)
 	{
@@ -936,6 +927,118 @@ void Manager::OnLbnSelchangeList3()
 	}
 	return ;
 }
+int Manager::delUser(CString username)
+{
+	CString sql_del;
+	sql_del.Format(_T("delete from user where username=\'%s\';"),username);
+	temp=transformPlus.toString(sql_del);
+	sql=temp.c_str();
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+void Manager::OnBnClickedButton2()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if(search_type==-1)
+	{
+		this->ShowWindow(SW_HIDE);
+		SignIn signIn;
+		signIn.DoModal();
+		this->ShowWindow(SW_SHOW);
+	}
+	else if (search_type==1)
+	{
+		//查看预约
+		acceptBorrowBook();
+		insertAppointmentMessageToListBox();
+		return ;
+	} 
+	else if(search_type==2)
+	{
+		//以书查人
+		//借阅详情已经隐藏
+	}
+	else if(search_type==5)
+	{
+		//以人查书
+		//借阅详情
+		if(uBThisNode==NULL)
+		{
+			AfxMessageBox(_T("还未选取学生"));
+			return ;
+		}
+		AboutUserBook aboutUserBook;
+		aboutUserBook.ISBN=transformPlus.toCString(uBThisNode->reISBN());
+		aboutUserBook.DoModal();
+		return ;
+	}
+	else if(search_type==3)
+	{
+		//查看违约情况
+		if(bGThisNode==NULL)
+		{
+			AfxMessageBox(_T("还未选取学生"));
+			return ;
+		}
+		BadGuys badguys;
+		badguys.username=bGThisNode->reUsername();
+		badguys.DoModal();
+		return ;
+	}
+	else if(search_type==4)
+	{
+		//书籍统计
+		if(uBThisNode==NULL)
+		{
+			AfxMessageBox(_T("Adadafawftqwtwqet"));
+			return ;
+		}
+		AboutTheBookMessage aboutTheBookMessage;
+		aboutTheBookMessage.theBookNode=mBThisNode;
+		aboutTheBookMessage.DoModal();
+		return ;
+	}
+	else if(search_type==6)
+	{
+		//用户统计
+		if(bGThisNode==NULL)
+		{
+			AfxMessageBox(_T("还未选取学生"));
+			return ;
+		}
+		BadGuys badguys;
+		badguys.username=bGThisNode->reUsername();
+		badguys.DoModal();
+		return ;
+	}
+	else if(search_type==7)
+	{
+		//用户搜索
+		if(bGThisNode==NULL)
+		{
+			AfxMessageBox(_T("请输入搜索项"));
+			return ;
+		}
+		BadGuys badguys;
+		badguys.username=bGThisNode->reUsername();
+		badguys.DoModal();
+		return ;
+	}
+	else
+	{
+		AfxMessageBox(_T("error!@"));
+		return ;
+	}
+}
+
+
 
 //被禁同学详情
 void Manager::OnBnClickedButton4()
