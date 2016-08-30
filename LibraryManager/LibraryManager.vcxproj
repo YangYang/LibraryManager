@@ -191,6 +191,8 @@
     <ClInclude Include="binary_log_funcs.h" />
     <ClInclude Include="binary_log_types.h" />
     <ClInclude Include="Book.h" />
+    <ClInclude Include="FineGuyList.h" />
+    <ClInclude Include="FineGuyMessage.h" />
     <ClInclude Include="InterfaceForUser.h" />
     <ClInclude Include="LibraryManager.h" />
     <ClInclude Include="LibraryManagerDlg.h" />
@@ -212,6 +214,8 @@
     <ClCompile Include="badGuyList.cpp" />
     <ClCompile Include="BadGuys.cpp" />
     <ClCompile Include="Book.cpp" />
+    <ClCompile Include="FineGuyList.cpp" />
+    <ClCompile Include="FineGuyMessage.cpp" />
     <ClCompile Include="InterfaceForUser.cpp" />
     <ClCompile Include="LibraryManager.cpp" />
     <ClCompile Include="LibraryManagerDlg.cpp" />

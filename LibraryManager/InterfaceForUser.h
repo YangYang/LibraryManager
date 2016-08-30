@@ -30,6 +30,7 @@ public:
 	CString loginUser;//登陆者的账号
 	CString loginUserType;//登陆者的种类
 	CString edit_search;
+	CString loginUserProfessioanl;	//登陆者专业
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedRadio1();
 
@@ -99,4 +100,8 @@ public:
 	int checkUserBookNumber(CString,MYSQL loca_mysql);
 	int judgeMessage();
 	int delBlockMessage(CString );
+	int judgeUserInFineListOrNot();
+	CString fineTime;
+	int judgeUserWrongTime();
+	int addUserToFineUserTable();
 };

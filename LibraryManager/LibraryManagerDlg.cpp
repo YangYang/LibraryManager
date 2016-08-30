@@ -235,6 +235,7 @@ void CLibraryManagerDlg::OnBnClickedOk()
 				interfaceForUser.username=row[1];
 				interfaceForUser.loginUser=edit_username;
 				interfaceForUser.loginUserType=transformPlus.toCString(type);
+				interfaceForUser.loginUserProfessioanl=transformPlus.toCString(row[4]);
 				if(type=="1") 
 				{
 					interfaceForUser.TYPE="±¾¿ÆÉú";

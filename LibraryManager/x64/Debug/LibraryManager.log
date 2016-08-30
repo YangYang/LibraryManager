@@ -1,12 +1,22 @@
-﻿生成启动时间为 2016/8/29 22:11:03。
+﻿生成启动时间为 2016/8/30 10:18:03。
      1>项目“C:\Users\yangy\Documents\GitHub\LibraryManager\LibraryManager\LibraryManager.vcxproj”在节点 2 上(build 个目标)。
      1>InitializeBuildStatus:
-         正在对“x64\Debug\LibraryManager.unsuccessfulbuild”执行 Touch 任务。
+         正在创建“x64\Debug\LibraryManager.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
        ClCompile:
          所有输出均为最新。
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /Od /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"x64\Debug\LibraryManager.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc100.pdb" /Gd /TP /errorReport:prompt LibraryManagerDlg.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /Od /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"x64\Debug\LibraryManager.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc100.pdb" /Gd /TP /errorReport:prompt InterfaceForUser.cpp LibraryManager.cpp LibraryManagerDlg.cpp
+         InterfaceForUser.cpp
+     1>InterfaceForUser.cpp(1028): warning C4996: 'gmtime': This function or variable may be unsafe. Consider using gmtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\time.inl(99) : 参见“gmtime”的声明
+     1>InterfaceForUser.cpp(1797): warning C4101: “res”: 未引用的局部变量
+     1>InterfaceForUser.cpp(1798): warning C4101: “row”: 未引用的局部变量
+     1>InterfaceForUser.cpp(1903): warning C4996: 'gmtime': This function or variable may be unsafe. Consider using gmtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\time.inl(99) : 参见“gmtime”的声明
+         Generating Code...
+     1>c:\users\yangy\documents\github\librarymanager\librarymanager\interfaceforuser.cpp(1596): warning C4715: “InterfaceForUser::judgeUserWrongTime”: 不是所有的控件路径都返回值
+         Skipping... (no relevant changes detected)
          LibraryManagerDlg.cpp
-     1>c:\users\yangy\documents\github\librarymanager\librarymanager\librarymanagerdlg.cpp(303): warning C4715: “CLibraryManagerDlg::connectMySQL”: 不是所有的控件路径都返回值
+         LibraryManager.cpp
        ResourceCompile:
          所有输出均为最新。
        ManifestResourceCompile:
@@ -20,6 +30,8 @@
          x64\Debug\badGuyList.obj
          x64\Debug\BadGuys.obj
          x64\Debug\Book.obj
+         x64\Debug\FineGuyList.obj
+         x64\Debug\FineGuyMessage.obj
          x64\Debug\InterfaceForUser.obj
          x64\Debug\LibraryManager.obj
          x64\Debug\LibraryManagerDlg.obj
@@ -45,4 +57,4 @@
 
 生成成功。
 
-已用时间 00:00:06.63
+已用时间 00:00:04.78

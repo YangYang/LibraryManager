@@ -975,9 +975,65 @@ void InterfaceForUser::borrowBook(string userType,string userBookNumber,MYSQL lo
 
 
 */
+
+int InterfaceForUser::judgeUserInFineListOrNot()
+{
+	MYSQL local_mysql;
+	mysql_init(&local_mysql);
+	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
+	{
+		MessageBox(_T("error"));
+		AfxMessageBox(_T("connect to databases failed!"));
+	}
+	else
+	{
+		//AfxMessageBox(_T("connect to database success!"));
+		mysql_query(&local_mysql,"set names'gb2312'");
+	}
+
+	CString sql_query;
+	sql_query.Format(_T("select * from user_finetime;"));
+	string temp=transformPlus.toString(sql_query);
+	const char * sql=temp.c_str();
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		res=mysql_store_result(&local_mysql);
+		while(row=mysql_fetch_row(res))
+		{
+			if(transformPlus.toCString(row[1])==loginUser)
+			{
+				fineTime=transformPlus.toCString(row[2]);
+				return 1;
+			}
+		}
+		return 0;
+	}
+	else
+	{
+		return 0;
+	}
+}
 void InterfaceForUser::OnBnClickedButton1()
 {
 	//选了书籍
+	int judgeLoginUser=judgeUserInFineListOrNot();
+	if(judgeLoginUser==1)
+	{
+		CString reBookTime;
+		struct tm *p;
+		time_t t;
+		t=transformPlus.toLong(fineTime)+28800;
+		p=gmtime(&t);
+		char s[80];
+		strftime(s, 80, "%Y-%m-%d %H:%M:%S", p);
+		reBookTime=transformPlus.toCString(s);
+		CString text;
+		text.Format(_T("您处于惩罚期内，请于%s后来借书！"),reBookTime);
+		AfxMessageBox(text);
+		return ;
+	}
 	if(thisNode!=NULL)
 	{
 		//判断本人是否有这本书
@@ -1262,6 +1318,8 @@ BOOL InterfaceForUser::OnInitDialog()
 	control_name.ShowWindow(TRUE);
 	control_username.SetWindowText(transformPlus.toCString(username));
 	control_username.ShowWindow(TRUE);
+	GetDlgItem(IDC_PROFESSIONAL)->SetWindowText(loginUserProfessioanl);
+	GetDlgItem(IDC_PROFESSIONAL)->ShowWindow(TRUE);
 	setUserBookMessage();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -1487,6 +1545,92 @@ int InterfaceForUser::addFineUser(CString username,MYSQL local_mysql)
 	}
 }
 
+
+//judgeUser wrongtime
+int InterfaceForUser::judgeUserWrongTime()
+{
+	MYSQL local_mysql;
+	mysql_init(&local_mysql);
+	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
+	{
+		MessageBox(_T("error"));
+		AfxMessageBox(_T("connect to databases failed!"));
+		//AfxGetMainWnd()->PostMessage(WM_CLOSE,0,0);
+	}
+	else
+	{
+		//AfxMessageBox(_T("connect to database success!"));
+		mysql_query(&local_mysql,"set names'gb2312'");
+	}
+
+	CString sql_query;
+	sql_query.Format(_T("select * from user where username=\'%s\';"),loginUser);
+	string temp=transformPlus.toString(sql_query);
+	const char * sql=temp.c_str();
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		res=mysql_store_result(&local_mysql);
+		row=mysql_fetch_row(res);
+		if(row)
+		{
+			int number=transformPlus.toInt(row[7]);
+			if(number>=3)
+			{
+				
+				return 1;
+			}
+		}
+		else
+		{
+			AfxMessageBox(_T("error!"));
+			return 0;
+		}
+	}
+	else
+	{
+		AfxMessageBox(_T("error"));
+		return 0;
+	}
+}
+int InterfaceForUser::addUserToFineUserTable()
+{
+	MYSQL local_mysql;
+	mysql_init(&local_mysql);
+	if(!mysql_real_connect(&local_mysql,"127.0.0.1","root","","librarymanager",3306,NULL,0))
+	{
+		MessageBox(_T("error"));
+		AfxMessageBox(_T("connect to databases failed!"));
+		//AfxGetMainWnd()->PostMessage(WM_CLOSE,0,0);
+	}
+	else
+	{
+		//AfxMessageBox(_T("connect to database success!"));
+		mysql_query(&local_mysql,"set names'gb2312'");
+	}
+
+	time_t now_time=time(0);
+	CString cstrNowTime;
+	cstrNowTime.Format(_T("%d"),now_time);
+	long time_long=transformPlus.toLong(cstrNowTime);
+	time_long+=604800;
+	CString fTime;
+	fTime=transformPlus.toCString(time_long);
+
+	CString sql_query;
+	sql_query.Format(_T("insert into user_finetime values (\'\',\'%s\',\'%s\');"),loginUser,fTime);
+	string temp=transformPlus.toString(sql_query);
+	const char * sql=temp.c_str();
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
 //还书
 void InterfaceForUser::OnBnClickedButton4()
 {
@@ -1557,14 +1701,26 @@ void InterfaceForUser::OnBnClickedButton4()
 						MessageBox(L"还书成功！");
 						OnInitDialog();
 					}
+					int j=judgeUserWrongTime();
+					if(j==1)
+					{
+						AfxMessageBox(_T("您违约超过三次，现已处于惩罚名单！"));
+						return ;
+					}
 
 
 					int ADDMISTAKE=addMistake(transformPlus.toString(loginUser),local_mysql);
 					if(ADDMISTAKE==1)
 					{
-						////////////////判断用户的mistake 如果是三次 就addfinuser/////////////////////////////////////////////////////
+						//判断用户的mistake 如果是三次 就addfinuser
 						MessageBox(L"您的应还日期已过，犯错次数加一，如果犯错次数达到3次，则将禁止借书一周！");
-						return ;
+						int i=judgeUserWrongTime();
+						if(i==1)
+						{
+							AfxMessageBox(_T("您违约超过三次，现已将您加入惩罚名单！"));
+							addUserToFineUserTable();
+							return ;
+						}
 					}
 					else
 					{
@@ -1737,6 +1893,22 @@ int InterfaceForUser::checkUserBookNumber(CString username,MYSQL local_mysql)
 void InterfaceForUser::OnBnClickedButton6()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	int judgeLoginUser=judgeUserInFineListOrNot();
+	if(judgeLoginUser==1)
+	{
+		CString reBookTime;
+		struct tm *p;
+		time_t t;
+		t=transformPlus.toLong(fineTime)+28800;
+		p=gmtime(&t);
+		char s[80];
+		strftime(s, 80, "%Y-%m-%d %H:%M:%S", p);
+		reBookTime=transformPlus.toCString(s);
+		CString text;
+		text.Format(_T("您处于惩罚期内，请于%s后来预约！"),reBookTime);
+		AfxMessageBox(text);
+		return ;
+	}
 	if(thisNode==NULL)
 	{
 		MessageBox(L"您还没有选取书籍！");

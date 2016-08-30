@@ -38,6 +38,7 @@ void Manager::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON3, control_button3);
 	DDX_Text(pDX, IDC_EDIT1, edit_text);
 	DDX_Control(pDX, IDC_RADIO1, control_search_type);
+	DDX_Control(pDX, IDC_LIST3, control_fine_list_box);
 }
 
 
@@ -53,6 +54,9 @@ BEGIN_MESSAGE_MAP(Manager, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON3, &Manager::OnBnClickedButton3)
 	ON_LBN_SELCHANGE(IDC_LIST1, &Manager::OnLbnSelchangeList1)
 	ON_BN_CLICKED(IDC_BUTTON2, &Manager::OnBnClickedButton2)
+	ON_LBN_SELCHANGE(IDC_LIST3, &Manager::OnLbnSelchangeList3)
+	ON_BN_CLICKED(IDC_BUTTON4, &Manager::OnBnClickedButton4)
+	ON_BN_CLICKED(IDC_BUTTON1, &Manager::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 //通用函数
@@ -564,6 +568,32 @@ void Manager::insertUserToListBox()
 	}
 }
 
+//查看被禁用户
+void Manager::insertFineGuiesListToListBox()
+{
+	connectMysql();
+	FineGuiesList.clearList();
+	CString sql_query;
+	sql_query.Format(_T("select * from user_finetime"));
+	temp=transformPlus.toString(sql_query);
+	sql=temp.c_str();
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		res=mysql_store_result(&local_mysql);
+		while(row=mysql_fetch_row(res))
+		{
+			int judge=control_fine_list_box.InsertString(-1,transformPlus.toCString(row[1]));
+			FineGuyList * newNode=new FineGuyList(transformPlus.toCString(row[1]),transformPlus.toCString(judge),transformPlus.toCString(row[2]));
+			FineGuiesList.add(newNode);
+			FineGuiesList.p->next=NULL;
+		}
+	}
+	else
+	{
+		return ;
+	}
+}
+
 
 void Manager::OnBnClickedOk()
 {
@@ -633,6 +663,7 @@ void Manager::OnBnClickedOk()
 BOOL Manager::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+	insertFineGuiesListToListBox();
 	search_type=-1;
 	control_button2.SetWindowText(L"添加用户");
 	control_button2.ShowWindow(SW_SHOW);
@@ -886,4 +917,52 @@ void Manager::OnLbnSelchangeList1()
 	}
 }
 
+//点击finlistbox 
+void Manager::OnLbnSelchangeList3()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString cstrText;
+	int selectedTextNumber;
+	selectedTextNumber=control_fine_list_box.GetCurSel();//获取当前点击项的位置
+	FineGuyList * head=FineGuiesList.head;
+	while(head)
+	{
+		if(head->reListPosition()==transformPlus.toCString(selectedTextNumber))
+		{
+			fGThisNode=head;
+			break;
+		}
+		head=head->next;
+	}
+	return ;
+}
 
+//被禁同学详情
+void Manager::OnBnClickedButton4()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	FineGuyMessage fineGuyMessage;
+	fineGuyMessage.theGuy=fGThisNode;
+	fineGuyMessage.DoModal();
+	return ;
+}
+
+//解禁
+void Manager::OnBnClickedButton1()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString sql_query;
+	sql_query.Format(_T("delete from user_finetime where username=\'%s\' and recoverTime=\'%s\';"),fGThisNode->reUsername(),fGThisNode->reFineTime());
+	temp=transformPlus.toString(sql_query);
+	sql=temp.c_str();
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		MessageBox(L"解除封印成功！");
+	}
+	else
+	{
+		MessageBox(L"解除封印失败！");
+	}
+	control_fine_list_box.ResetContent();
+	insertFineGuiesListToListBox();
+}

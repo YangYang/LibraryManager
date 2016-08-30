@@ -90,6 +90,12 @@
     <ClInclude Include="BadGuys.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="FineGuyList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FineGuyMessage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LibraryManager.cpp">
@@ -141,6 +147,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="BadGuys.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FineGuyList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FineGuyMessage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

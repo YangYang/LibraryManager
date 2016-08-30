@@ -15,6 +15,8 @@
 #include "AboutUserBook.h"
 #include "SignIn.h"
 #include "BadGuys.h"
+#include "FineGuyList.h"
+#include "FineGuyMessage.h"
 
 // Manager ¶Ô»°¿ò
 
@@ -89,4 +91,11 @@ public:
 	int delAppointmentMessage(CString username,CString bookISBN);
 	afx_msg void OnBnClickedButton2();
 	int sendMessageToUser(CString ,CString );
+	List<FineGuyList> FineGuiesList;
+	FineGuyList *fGThisNode;
+	void insertFineGuiesListToListBox();
+	CListBox control_fine_list_box;
+	afx_msg void OnLbnSelchangeList3();
+	afx_msg void OnBnClickedButton4();
+	afx_msg void OnBnClickedButton1();
 };

@@ -44,4 +44,5 @@ public:
 	CStatic control_return_book_time;
 	CString return_book_time;
 	CString loginUser;//µÇÂ½ÕßµÄÕËºÅ
+	afx_msg void OnStnClickedRetimetext();
 };
