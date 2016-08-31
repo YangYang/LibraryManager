@@ -1904,7 +1904,7 @@ void InterfaceForUser::OnBnClickedButton6()
 			int judgeUserBook=addUserBookNumber(loginUser,local_mysql);
 			int judugeBookNumber=reduceBookNumber(thisNode->reISBN(),local_mysql);
 			int judgeAdd=addBookToAppointmentBookTable(loginUser,transformPlus.toCString(thisNode->reISBN()),local_mysql);
-				if(judgeUserBook==judugeBookNumber&&1==judgeAdd)
+			if(judgeUserBook==judugeBookNumber&&1==judgeAdd)
 			{
 				MessageBox(L"Ô¤Ô¼³É¹¦£¡");
 				return ;

@@ -1,49 +1,18 @@
-﻿生成启动时间为 2016/8/30 21:04:59。
+﻿生成启动时间为 2016/8/31 19:09:16。
      1>项目“C:\Users\yangy\Documents\GitHub\LibraryManager\LibraryManager\LibraryManager.vcxproj”在节点 2 上(build 个目标)。
      1>InitializeBuildStatus:
-         正在创建“x64\Debug\LibraryManager.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+         正在对“x64\Debug\LibraryManager.unsuccessfulbuild”执行 Touch 任务。
        ClCompile:
          所有输出均为最新。
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /Od /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"x64\Debug\LibraryManager.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc100.pdb" /Gd /TP /errorReport:prompt AboutTheBookMessage.cpp AboutUserBook.cpp AboutYourBookMessage.cpp BadGuys.cpp Book.cpp FineGuyList.cpp FineGuyMessage.cpp InterfaceForUser.cpp LibraryManager.cpp LibraryManagerDlg.cpp Manager.cpp SignIn.cpp TransformPlus.cpp appointmentUser.cpp badGuyList.cpp managerBook.cpp managerUser.cpp
-         SignIn.cpp
+         D:\软件\VS2010\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /Od /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"x64\Debug\LibraryManager.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc100.pdb" /Gd /TP /errorReport:prompt Manager.cpp
          Manager.cpp
-         InterfaceForUser.cpp
-     1>InterfaceForUser.cpp(1016): warning C4996: 'gmtime': This function or variable may be unsafe. Consider using gmtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\time.inl(99) : 参见“gmtime”的声明
-     1>InterfaceForUser.cpp(1739): warning C4101: “res”: 未引用的局部变量
-     1>InterfaceForUser.cpp(1740): warning C4101: “row”: 未引用的局部变量
-     1>InterfaceForUser.cpp(1845): warning C4996: 'gmtime': This function or variable may be unsafe. Consider using gmtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\time.inl(99) : 参见“gmtime”的声明
-         FineGuyMessage.cpp
-     1>FineGuyMessage.cpp(99): warning C4996: 'gmtime': This function or variable may be unsafe. Consider using gmtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\time.inl(99) : 参见“gmtime”的声明
-         BadGuys.cpp
-         AboutYourBookMessage.cpp
-     1>AboutYourBookMessage.cpp(132): warning C4996: 'gmtime': This function or variable may be unsafe. Consider using gmtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\time.inl(99) : 参见“gmtime”的声明
-         AboutUserBook.cpp
-         AboutTheBookMessage.cpp
-         Generating Code...
-     1>c:\users\yangy\documents\github\librarymanager\librarymanager\interfaceforuser.cpp(1543): warning C4715: “InterfaceForUser::judgeUserWrongTime”: 不是所有的控件路径都返回值
-         Compiling...
-         managerUser.cpp
-         managerBook.cpp
-         badGuyList.cpp
-         appointmentUser.cpp
-         LibraryManagerDlg.cpp
-         LibraryManager.cpp
-         FineGuyList.cpp
-         Book.cpp
-         Generating Code...
-     1>c:\users\yangy\documents\github\librarymanager\librarymanager\librarymanagerdlg.cpp(304): warning C4715: “CLibraryManagerDlg::connectMySQL”: 不是所有的控件路径都返回值
-         Skipping... (no relevant changes detected)
-         TransformPlus.cpp
+     1>c:\users\yangy\documents\github\librarymanager\librarymanager\manager.cpp(255): warning C4715: “Manager::judgeUserBookNumber”: 不是所有的控件路径都返回值
        ResourceCompile:
          所有输出均为最新。
        ManifestResourceCompile:
          所有输出均为最新。
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\yangy\Documents\GitHub\LibraryManager\x64\Debug\LibraryManager.exe" /INCREMENTAL /NOLOGO libmysql.lib /MANIFEST /ManifestFile:"x64\Debug\LibraryManager.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\yangy\Documents\GitHub\LibraryManager\x64\Debug\LibraryManager.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"wWinMainCRTStartup" /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\yangy\Documents\GitHub\LibraryManager\x64\Debug\LibraryManager.lib" /MACHINE:X64 x64\Debug\LibraryManager.res
+         D:\软件\VS2010\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\yangy\Documents\GitHub\LibraryManager\x64\Debug\LibraryManager.exe" /INCREMENTAL /NOLOGO libmysql.lib /MANIFEST /ManifestFile:"x64\Debug\LibraryManager.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\yangy\Documents\GitHub\LibraryManager\x64\Debug\LibraryManager.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"wWinMainCRTStartup" /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\yangy\Documents\GitHub\LibraryManager\x64\Debug\LibraryManager.lib" /MACHINE:X64 x64\Debug\LibraryManager.res
          x64\Debug\LibraryManager.exe.embed.manifest.res
          x64\Debug\AboutTheBookMessage.obj
          x64\Debug\AboutUserBook.obj
@@ -67,7 +36,7 @@
          x64\Debug\userBook.obj
          LibraryManager.vcxproj -> C:\Users\yangy\Documents\GitHub\LibraryManager\x64\Debug\LibraryManager.exe
        Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"x64\Debug\LibraryManager.exe.embed.manifest" /manifest x64\Debug\LibraryManager.exe.intermediate.manifest "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\Include\Manifest\dpiaware.manifest"
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"x64\Debug\LibraryManager.exe.embed.manifest" /manifest x64\Debug\LibraryManager.exe.intermediate.manifest "D:\软件\VS2010\VC\Include\Manifest\dpiaware.manifest"
          所有输出均为最新。
        LinkEmbedManifest:
          所有输出均为最新。
@@ -79,4 +48,4 @@
 
 生成成功。
 
-已用时间 00:00:22.69
+已用时间 00:00:07.98

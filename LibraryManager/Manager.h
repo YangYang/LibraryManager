@@ -114,4 +114,6 @@ public:
 	int delBook(CString book_ISBN);
 	int delUser(CString username);
 	afx_msg void OnLbnDblclkList1();
+	int judgeUserBookNumber(CString username);
+	int reduceUserBookNumber(CString username );
 };

@@ -96,7 +96,7 @@ void Manager::OnBnClickedRadio1()
 	control_button2.ShowWindow(SW_SHOW);
 	control_button3.SetWindowText(L"禁止借阅");
 	control_button3.ShowWindow(SW_SHOW);
-	GetDlgItem(IDC_EDIT1)->SetWindowText((LPCTSTR)"");
+	GetDlgItem(IDC_EDIT1)->SetWindowText((transformPlus.toCString("")));
 	search_type=1;
 
 	//insertAppointmentMessageToListBox();
@@ -206,6 +206,96 @@ int Manager::sendMessageToUser(CString username,CString message)
 		return 0;
 	}
 }
+
+int Manager::judgeUserBookNumber(CString username)
+{
+	connectMysql();
+	CString sql_query;
+	sql_query.Format(_T("select * from user where username = \'%s\';"),username);
+	temp=transformPlus.toString(sql_query);
+	sql=temp.c_str();
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		res=mysql_store_result(&local_mysql);
+		row=mysql_fetch_row(res);
+		if(row)
+		{
+			int staticNumber=0;
+			if (transformPlus.toString(row[5])=="1")
+			{
+				staticNumber=4;
+			} 
+			else if(transformPlus.toString(row[5])=="2")
+			{
+				staticNumber=6;
+			}
+			else if(transformPlus.toString(row[5])=="3")
+			{
+				staticNumber=10;
+			}
+			else if(transformPlus.toString(row[5])=="4")
+			{
+				staticNumber=999999;
+			}
+			int nowNumber=transformPlus.toInt(row[6]);
+			nowNumber++;
+			MessageBox(transformPlus.toCString(nowNumber));
+			MessageBox(transformPlus.toCString(staticNumber));
+			if(nowNumber>staticNumber)
+			{
+				return 0;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+	}
+
+}
+int Manager::reduceUserBookNumber(CString username)
+{
+	connectMysql();
+	CString sql_select;
+	sql_select.Format(_T("select * from user where username=\'%s\';"),username);
+	temp=transformPlus.toString(sql_select);
+	sql=temp.c_str();
+	if(mysql_query(&local_mysql,sql)==0)
+	{
+		res=mysql_store_result(&local_mysql);
+		row=mysql_fetch_row(res);
+		if(row)
+		{
+			int number =transformPlus.toInt(row[6]);
+			number--;
+			CString sql_update;
+
+			sql_update.Format(_T("update user set bookNumber=\'%s\' where username= \'%s\';"),transformPlus.toCString(number),username);
+			temp=transformPlus.toString(sql_update);
+			sql=temp.c_str();
+			if(mysql_query(&local_mysql,sql)==0)
+			{
+				return 1;
+			}
+			else
+			{
+				AfxMessageBox(_T("errorrrrrrr!"));
+				return 0;
+			}
+		}
+		else
+		{
+			AfxMessageBox(_T("error!!!!!!!!!!!!!!!"));
+			return 0;
+		}
+	}
+	else
+	{
+		AfxMessageBox(_T("er!"));
+		return 0;
+	}
+}
+
 void Manager::acceptBorrowBook()
 {
 	if(appThisNode==NULL)
@@ -224,7 +314,8 @@ void Manager::acceptBorrowBook()
 			//过期
 			MessageBox(L"预约时间已过！");
 			int judge=delAppointmentMessage(appThisNode->reUsername(),appThisNode->reISBN());
-			if(judge==1)
+			int judge2=reduceUserBookNumber(appThisNode->reUsername());
+			if(judge==judge2)
 			{
 				MessageBox(L"该学生预约信息已删除");
 				return ;
@@ -238,6 +329,14 @@ void Manager::acceptBorrowBook()
 		else
 		{
 			//准许
+			int judgeBookNumber=judgeUserBookNumber(appThisNode->reUsername());
+			if(judgeBookNumber==0)
+			{
+				AfxMessageBox(_T("该同学可借书籍已达上限！"));
+				delAppointmentMessage(appThisNode->reUsername(),appThisNode->reISBN());
+				reduceUserBookNumber(appThisNode->reUsername());
+				return ;
+			}
 			time_t nowTime=time(0);
 			CString cstrNowTime;
 			cstrNowTime.Format(_T("%d"),nowTime);
@@ -394,6 +493,7 @@ void Manager::OnBnClickedRadio3()
 void Manager::insertBadGuyToListBox()
 {
 	connectMysql();
+	BadGuyList.clearList();
 	CString sql_query;
 	sql_query.Format(_T("select * from user where mistake>0 ;"));
 	temp=transformPlus.toString(sql_query);
@@ -492,7 +592,7 @@ void Manager::OnBnClickedRadio6()
 }
 void Manager::insertAllUserToListBox()
 {
-	managerUserList.clearList();
+	BadGuyList.clearList();
 	allUsersNumber=0;
 	connectMysql();
 	CString sql_query;
@@ -542,7 +642,7 @@ void Manager::OnBnClickedRadio7()
 void Manager::insertUserToListBox()
 {
 	connectMysql();
-	managerUserList.clearList();
+	BadGuyList.clearList();
 	control_list_box.ResetContent();
 	CString sql_query;
 	sql_query.Format(_T("select * from user where username = \'%s\' ;"),edit_text);
@@ -659,6 +759,7 @@ void Manager::OnBnClickedOk()
 	else if(search_type==7)
 	{
 		UpdateData(TRUE);
+		//MessageBox(edit_text);
 		if(edit_text=="")
 		{
 			AfxMessageBox(_T("请输入搜索内容"));
@@ -903,6 +1004,7 @@ void Manager::OnLbnSelchangeList1()
 	else if(search_type==7)
 	{
 		//用户搜索
+		bGThisNode=NULL;
 		badGuyList *head=BadGuyList.head;
 		while(head)
 		{
