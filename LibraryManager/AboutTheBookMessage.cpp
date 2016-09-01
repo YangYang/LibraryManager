@@ -28,6 +28,7 @@ void AboutTheBookMessage::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(AboutTheBookMessage, CDialogEx)
+	ON_BN_CLICKED(IDCANCEL, &AboutTheBookMessage::OnBnClickedCancel)
 END_MESSAGE_MAP()
 
 
@@ -87,4 +88,11 @@ BOOL AboutTheBookMessage::OnInitDialog()
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
+}
+
+
+void AboutTheBookMessage::OnBnClickedCancel()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CDialogEx::OnCancel();
 }
